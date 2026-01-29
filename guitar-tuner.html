@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Tuner</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #startButton {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        #startButton:hover {
+            background: #45a049;
+        }
+        #noteDisplay {
+            font-size: 48px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        #tuningDisplay {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #666;
+        }
+        #centsDisplay {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+        .note-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .note {
+            padding: 10px 15px;
+            border-radius: 5px;
+            background: #eee;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            min-width: 60px;
+        }
+        .note:hover {
+            background: #e0e0e0;
+        }
+        .note.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #2E7D32;
+        }
+        .note.selected {
+            border-color: #2196F3;
+            background: #E3F2FD;
+        }
+        .note.playing {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .note-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 2px;
+        }
+        .note.active .note-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .note.selected .note-label {
+            color: #1976D2;
+        }
+        #tuningMeter {
+            width: 300px;
+            height: 100px;
+            margin: 20px auto;
+        }
+        .accuracy-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guitar Tuner</h1>
+        <div class="note-container">
+            <div class="note" data-note="E2">
+                <div>E</div>
+                <div class="note-label">6th (low)</div>
+            </div>
+            <div class="note" data-note="A2">
+                <div>A</div>
+                <div class="note-label">5th</div>
+            </div>
+            <div class="note" data-note="D3">
+                <div>D</div>
+                <div class="note-label">4th</div>
+            </div>
+            <div class="note" data-note="G3">
+                <div>G</div>
+                <div class="note-label">3rd</div>
+            </div>
+            <div class="note" data-note="B3">
+                <div>B</div>
+                <div class="note-label">2nd</div>
+            </div>
+            <div class="note" data-note="E4">
+                <div>E</div>
+                <div class="note-label">1st (high)</div>
+            </div>
+        </div>
+        <div id="noteDisplay">-</div>
+        <canvas id="tuningMeter" width="600" height="200"></canvas>
+        <div class="accuracy-label">← Too Low | Perfect | Too High →</div>
+        <div id="centsDisplay">-</div>
+        <div id="tuningDisplay">Start tuning to see feedback</div>
+        <button id="startButton">Start Tuning</button>
+    </div>
+
+    <script>
+        // Standard guitar tuning frequencies (in Hz)
+        const TUNING = {
+            'E2': 82.41,   // 6th string (low E)
+            'A2': 110.00,  // 5th string
+            'D3': 146.83,  // 4th string
+            'G3': 196.00,  // 3rd string
+            'B3': 246.94,  // 2nd string
+            'E4': 329.63   // 1st string (high E)
+        };
+
+        let audioContext = null;
+        let analyser = null;
+        let mediaStream = null;
+        let selectedNoteName = null; // Track which note to focus on
+
+        // Add smoothing factor for meter movement
+        const SMOOTHING_FACTOR = 0.8;
+        let lastCents = 0;
+        let lastPitch = -1;
+        let smoothedPitch = -1;
+
+        // Initialize meter
+        const canvas = document.getElementById('tuningMeter');
+        const ctx = canvas.getContext('2d');
+        const meterWidth = canvas.width;
+        const meterHeight = canvas.height;
+
+        function drawMeter(cents) {
+            // Smooth the cents value for more stable display
+            lastCents = lastCents * SMOOTHING_FACTOR + cents * (1 - SMOOTHING_FACTOR);
+            
+            ctx.clearRect(0, 0, meterWidth, meterHeight);
+            
+            // Draw background
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, meterWidth, meterHeight);
+            
+            // Draw center line
+            const centerX = meterWidth / 2;
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, meterHeight);
+            ctx.stroke();
+            
+            // Draw tolerance zones
+            const toleranceWidth = 50;
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(centerX - toleranceWidth/2, 0, toleranceWidth, meterHeight);
+            
+            // Draw needle
+            const needlePos = centerX + (lastCents * 3);
+            ctx.beginPath();
+            ctx.moveTo(needlePos, 0);
+            ctx.lineTo(needlePos - 10, meterHeight);
+            ctx.lineTo(needlePos + 10, meterHeight);
+            ctx.fillStyle = Math.abs(lastCents) < 5 ? '#4CAF50' : '#ff6b6b';
+            ctx.fill();
+        }
+
+
+        // Add click handlers to select target note
+        document.querySelectorAll('.note').forEach(noteElem => {
+            noteElem.addEventListener('click', () => {
+                const noteName = noteElem.getAttribute('data-note');
+                console.log('Note selected:', noteName);
+                
+                // Remove selected class from all notes first
+                document.querySelectorAll('.note').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked note
+                noteElem.classList.add('selected');
+                
+                // Set this as the target note to match
+                selectedNoteName = noteName;
+                
+                console.log('Target frequency:', TUNING[noteName]);
+            });
+        });
+
+
+        // Update the start/stop button handler
+        document.getElementById('startButton').addEventListener('click', async () => {
+            try {
+                if (!audioContext) {
+                    // Initialize Audio Context
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    // Get microphone access
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    
+                    // Create audio nodes
+                    const source = audioContext.createMediaStreamSource(mediaStream);
+                    analyser = audioContext.createAnalyser();
+                    analyser.fftSize = 4096; // Larger FFT for better low-frequency resolution
+                    
+                    // Connect nodes
+                    source.connect(analyser);
+                    
+                    // Start pitch detection
+                    requestAnimationFrame(updatePitch);
+                    
+                    document.getElementById('startButton').textContent = 'Stop Tuning';
+                    document.getElementById('tuningDisplay').textContent = 'Listening...';
+                } else {
+                    // Stop everything
+                    if (mediaStream) {
+                        mediaStream.getTracks().forEach(track => track.stop());
+                        mediaStream = null;
+                    }
+                    if (audioContext) {
+                        await audioContext.close();
+                        audioContext = null;
+                    }
+                    analyser = null;
+                    
+                    document.getElementById('startButton').textContent = 'Start Tuning';
+                    document.getElementById('tuningDisplay').textContent = 'Start tuning to see feedback';
+                    document.getElementById('noteDisplay').textContent = '-';
+                    document.getElementById('centsDisplay').textContent = '-';
+                    drawMeter(0);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Clean up any partially initialized resources
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                    mediaStream = null;
+                }
+                if (audioContext) {
+                    await audioContext.close();
+                    audioContext = null;
+                }
+                analyser = null;
+                
+                document.getElementById('tuningDisplay').textContent = 
+                    'Error accessing microphone. Please ensure microphone permissions are granted.';
+                document.getElementById('startButton').textContent = 'Start Tuning';
+            }
+        });
+
+        // Enhanced autocorrelation with better noise filtering
+        function autoCorrelate(buffer, sampleRate) {
+            // Apply Hanning window to reduce spectral leakage
+            const windowedBuffer = new Float32Array(buffer.length);
+            for (let i = 0; i < buffer.length; i++) {
+                windowedBuffer[i] = buffer[i] * (0.5 * (1 - Math.cos(2 * Math.PI * i / buffer.length)));
+            }
+            
+            // Calculate RMS and apply dynamic threshold
+            let rms = 0;
+            for (let i = 0; i < buffer.length; i++) {
+                rms += windowedBuffer[i] * windowedBuffer[i];
+            }
+            rms = Math.sqrt(rms / buffer.length);
+            
+            // More stringent noise threshold
+            if (rms < 0.015) return -1;
+
+            let correlations = new Array(buffer.length).fill(0);
+            
+            // Normalized Square Difference Function (NSDF) for better peak detection
+            for (let lag = 0; lag < buffer.length; lag++) {
+                let sum = 0;
+                let normalizer = 0;
+                
+                for (let i = 0; i < buffer.length - lag; i++) {
+                    sum += windowedBuffer[i] * windowedBuffer[i + lag];
+                    normalizer += windowedBuffer[i] * windowedBuffer[i] + 
+                                windowedBuffer[i + lag] * windowedBuffer[i + lag];
+                }
+                
+                correlations[lag] = 2 * sum / (normalizer + Number.EPSILON);
+            }
+
+            // Find the best peak using parabolic interpolation
+            let maxCorrelation = -1;
+            let maxLag = -1;
+            
+            // Skip the first few samples to avoid sub-harmonics
+            // Lower minimum lag for better low-frequency detection (E2 is ~82 Hz)
+            const minLag = 16;
+            for (let lag = minLag; lag < correlations.length; lag++) {
+                if (correlations[lag] > maxCorrelation && 
+                    correlations[lag] > correlations[lag - 1] && 
+                    correlations[lag] > correlations[lag + 1]) {
+                    
+                    // Parabolic interpolation for better frequency accuracy
+                    const alpha = correlations[lag - 1];
+                    const beta = correlations[lag];
+                    const gamma = correlations[lag + 1];
+                    const peak = lag + (gamma - alpha) / (2 * (2 * beta - gamma - alpha));
+                    
+                    maxCorrelation = correlations[lag];
+                    maxLag = peak;
+                }
+            }
+
+            // Adaptive confidence check - lower threshold for low frequencies
+            const estimatedFreq = sampleRate / maxLag;
+            const confidenceThreshold = estimatedFreq < 150 ? 0.4 : 0.5;
+            if (maxCorrelation < confidenceThreshold) return -1;
+
+            return sampleRate / maxLag;
+        }
+
+        function updatePitch() {
+            if (!audioContext) return;
+
+            const bufferLength = analyser.frequencyBinCount;
+            const timeData = new Float32Array(bufferLength);
+            analyser.getFloatTimeDomainData(timeData);
+
+            const rawPitch = autoCorrelate(timeData, audioContext.sampleRate);
+            
+            // Smooth the pitch detection for stability, especially for low frequencies
+            let pitch = -1;
+            if (rawPitch !== -1) {
+                if (lastPitch === -1) {
+                    smoothedPitch = rawPitch;
+                } else {
+                    // Use stronger smoothing for low frequencies (like E2)
+                    const smoothing = rawPitch < 150 ? 0.9 : 0.7;
+                    smoothedPitch = smoothedPitch * smoothing + rawPitch * (1 - smoothing);
+                }
+                pitch = smoothedPitch;
+                lastPitch = pitch;
+            } else {
+                lastPitch = -1;
+                smoothedPitch = -1;
+            }
+            
+            if (pitch !== -1) {
+                // Get the detected note
+                const detectedNote = getNote(pitch);
+                
+                // If a note is selected, calculate cents relative to that target
+                let targetNote = detectedNote;
+                let cents;
+                
+                if (selectedNoteName) {
+                    targetNote = { name: selectedNoteName, frequency: TUNING[selectedNoteName] };
+                    cents = getCents(pitch, targetNote.frequency);
+                } else {
+                    cents = getCents(pitch, detectedNote.frequency);
+                }
+                
+                // Update displays - show detected note
+                document.getElementById('noteDisplay').textContent = detectedNote.name;
+                
+                // Show cents prominently
+                const centsValue = Math.abs(cents).toFixed(1);
+                const centsSign = cents > 0 ? '+' : '-';
+                document.getElementById('centsDisplay').textContent = `${centsSign}${centsValue} cents`;
+                
+                // Draw the tuning meter
+                drawMeter(cents);
+                
+                let guidance = '';
+                if (selectedNoteName) {
+                    // Show guidance relative to selected target
+                    if (Math.abs(cents) < 5) {
+                        guidance = '✓ In tune!';
+                    } else {
+                        guidance = cents > 0 ? '↓ Tune down' : '↑ Tune up';
+                    }
+                } else {
+                    // Show guidance relative to detected note
+                    if (Math.abs(cents) < 5) {
+                        guidance = '✓ In tune!';
+                    } else {
+                        guidance = cents > 0 ? '↓ Tune down' : '↑ Tune up';
+                    }
+                }
+                document.getElementById('tuningDisplay').textContent = guidance;
+
+                // Update note indicators - show active for detected note
+                const currentNoteName = detectedNote.name;
+                document.querySelectorAll('.note').forEach(noteElem => {
+                    if (noteElem.getAttribute('data-note') === currentNoteName) {
+                        noteElem.classList.add('active');
+                    } else {
+                        noteElem.classList.remove('active');
+                    }
+                    // Don't remove the selected class here - let it persist
+                });
+            } else {
+                // Clear the display when no pitch is detected
+                drawMeter(0);
+                document.getElementById('tuningDisplay').textContent = 'No pitch detected';
+                document.getElementById('noteDisplay').textContent = '-';
+                document.getElementById('centsDisplay').textContent = '-';
+                // Remove only active class, keep selected state
+                document.querySelectorAll('.note').forEach(noteElem => {
+                    noteElem.classList.remove('active');
+                });
+            }
+
+            requestAnimationFrame(updatePitch);
+        }
+
+        // Get the closest note for a given frequency
+        function getNote(frequency) {
+            // Always find the closest note in our TUNING object
+            let closestNote = null;
+            let closestDistance = Infinity;
+
+            for (const [note, freq] of Object.entries(TUNING)) {
+                const distance = Math.abs(frequency - freq);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestNote = { name: note, frequency: freq };
+                }
+            }
+
+            return closestNote;
+        }
+
+        // Calculate cents deviation from target frequency
+        function getCents(frequency, targetFrequency) {
+            return 1200 * Math.log2(frequency / targetFrequency);
+        }
+    </script>
+</body>
+</html>
+

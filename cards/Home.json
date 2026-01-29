@@ -1,0 +1,222 @@
+[
+  {
+    "title": "Childcare Helpers (Kids)",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61bd69fbd143ca7f7bf6d79a_FP-cards-home-01.png",
+    "category": "Home",
+    "definition": "It takes a village, and you’re fortunate if your village includes a nanny,\n                  babysitter, family caregivers, or others who pitch in with the kids. It can be a lifesaver to have the\n                  help, but it still requires someone to Conceive and Plan before Nanny Poppins or Grandma Shirley shows\n                  up to help Execute. They don’t magically appear when you want them to, so schedules need to be\n                  managed, along with payment, delegation of responsibilities, and ongoing communication. Heads up: When\n                  your helper cancels or quits, this cardholder is not necessarily the one who drops everything. Rather,\n                  engage in Fair Play immediately to re-deal the applicable cards, for example, “transportation (kids)”\n                  and “watching.”",
+    "planning": "",
+    "execution": "",
+    "minimumStandardOfCare": "Will they show up when you need them, know what they are supposed to do and are\n                  paid on time?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Cleaning",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61bd6e0c2045053016d2aea7_FP-cards-home-02.png",
+    "category": "Home",
+    "definition": "The pancake batter that fell into the crack on the side of the oven? Last week?\n                  It’s still there. The pee all over the toilet seat because your toddler can’t aim? Still there. The\n                  trail of sand in your entryway post-playground? Still there. If you have someone to help deep clean\n                  your bathroom and kitchen—lucky you. It’s still your responsibility to manage the schedule, task list,\n                  payment, etc. Re-deal this card often, as it’s a biggie. Tip! Coordinate with the “home goods and\n                  supplies” cardholder so you have cleaning supplies in the house when you need them.",
+    "planning": "OUTSOURCED- Sourcing- Communicating with “home goods and supplies” cardholder for supplies-\n                    Scheduling- InterviewingINSOURCED- Communicating with “home goods and supplies” cardholder for\n                    supplies",
+    "execution": "- Hiring- Ongoing communication and supervision- Making payments- Reimbursing to purchase\n                    suppliesDAILY/WEEKLY- Bed making- Counter-top cleaning- Vacuuming floors/carpets/couches- Bathroom\n                    toilet bowl cleaning/bathroom floor mopping- Bathtub/shower tile and glassOCCASIONAL- Carpets/floor-\n                    Drapes- Dusting- Toys- Window washing- Defrosting refrigerator/freezer- Outdoor\n                    grill/barbecue/furniture- Upholstery",
+    "minimumStandardOfCare": "Will our home be reasonably clean and safe for our family?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Dishes",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61bd6e460b1c0f1db56c76b5_FP-cards-home-03.png",
+    "category": "Home",
+    "definition": "It’s no wonder so many articles about domestic labor begin and end with dishes—the\n                  metaphorical third rail of chores. This cardholder is responsible for washing and drying by hand\n                  and/or loading and unloading the dishwasher—for every meal. The upside? Your partner doesn’t get to\n                  criticize how you put the plates in the “wrong” way. Re-deal this card often to avoid thrown dishes.",
+    "planning": "- Paying special care to specialty items like non-stick and cast-iron items",
+    "execution": "- Washing and drying dishes and pots and pans (by hand) and/or loading and unloading dishwasher-\n                    Putting dishes away in proper location",
+    "minimumStandardOfCare": "Are the dishes appropriately handled? Clean dry and put away on a regular basis?\n                  (i.e pans hand washed if needed)",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Dry Cleaning",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61bd6e5ddd09536d39d38211_FP-cards-home-04.png",
+    "category": "Home",
+    "definition": "Even something as seemingly straightforward as dry cleaning requires step-by-step\n                  CPE. This card entails having a bin/bag at home, ensuring the appropriate clothes get into that\n                  bin/bag, finding a dry cleaner, knowing when it’s open so you can coordinate drop-off and pickup, and\n                  taking off the plastic wrapping before hanging clothes back in the closet. If the mutually agreed-upon\n                  MSC is that all clothes come back home, this cardholder is responsible for tracking down their\n                  spouse’s favorite shirt when it goes missing or negotiating a refund. (And maybe finding a new dry\n                  cleaner, too.)",
+    "planning": "- Researching appropriate dry cleaner for pricing, location and hours- Setting up account at dry\n                    cleaner for payment- Scheduling pick-up/drop-off or physical pick-up and drop-off in store- Taking\n                    inventory of pieces dropped off",
+    "execution": "- Purchasing dry-cleaning bin/or bag and making sure appropriate clothes are in the bin- Tagging\n                    pants/shirts with stains- Ensuring matching pieces picked up- Taking off plastic wrapping and\n                    placing clothes in closet",
+    "minimumStandardOfCare": "Are your dry-cleaned clothes ready and clean when you need them?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Garbage",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96180f7b322d61dcd88_Fairplay_RegularCards_Page_012a.png",
+    "category": "Home",
+    "definition": "Really, how much darn trash can one family create? Staggering. To CPE this card\n                  means, at minimum, you take out the trash before the garbage truck turns the corner of your block\n                  (which day is it again?). Whoever holds this card is responsible for anticipating when trash bags are\n                  running low, and a word to the wise: Don’t you dare sit back down on the couch until you put a new bag\n                  back in the trash can!",
+    "planning": "ALL NON-APARTMENT DWELLERS- Applying to the city/municipality for garbage bins- Taking note of\n                    garbage day",
+    "execution": "- Placing/replacing bag in home trash can- Removing full garbage bags- Placing full garbage bags in\n                    trash chute/outdoor bins- Labeling bins- Taking bins back out/in, driving to town dump/placing\n                    garbage in alley- Checking bins for overflow trash/keeping bins clean",
+    "minimumStandardOfCare": "Is trash out of your home before it overflows and if applicable did the cans go\n                  out before trash day?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Groceries",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e9628b9cedf2935be7bc_Fairplay_RegularCards_Page_013a.png",
+    "category": "Home",
+    "definition": "Your family needs to eat. Can we all agree on that? Good. So how do the pantry and\n                  refrigerator get stocked on an ongoing basis? With CPE. This includes noticing what’s about to be used\n                  up or expire, keeping a running grocery list, and getting to the market . . . ideally before you\n                  realize there’s not a drop of milk in the fridge. Even if your family orders groceries online and your\n                  go-to dinner is frozen pizza, this card requires CPE nearly 365 days a year. Consult the various\n                  “meals” cardholders regularly so you can be sure you have taco shells in the cupboard for taco night.",
+    "planning": "- Making a master list (consulting with “meals” cardholder)- Checking refrigerator and pantry for\n                    what is low and adding to list",
+    "execution": "- Shopping (grocery stores and/or online)- Loading and unloading groceries- Placing items in\n                    pantry/refrigerator- Throwing away expired items from refrigerator/freezer",
+    "minimumStandardOfCare": "Are the appropriate, agreed-upon groceries in the home when you need them?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Home Furnishings",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96280f7b3e5de1dcd8d_Fairplay_RegularCards_Page_014a.png",
+    "category": "Home",
+    "definition": "CPEing this card can be as basic as making sure that every bed has a pillow, you\n                  have towels in the closet, and the drinking glasses with cracks get replaced before someone chips a\n                  tooth. This card is not a one-time deal, as there’s regular inventory to be taken and just when you\n                  could use that 20 percent off Bed Bath and Beyond coupon, it’s nowhere to be found. Kindly discuss\n                  with the “points, miles, and coupons” cardholder so you’re buttoned up for your next trip to the\n                  store.",
+    "planning": "- Creating an inventory of what is needed- Researching items for price, look and functionality",
+    "execution": "- Purchasing items for the home: pots and pans, cutlery, dishes, towels, sheets, hand towels,\n                    pillows (beds, couches, etc.), mattresses, duvets, picture frames, candles, door mats, art/posters,\n                    appliances, bed frames, couches, dressers, chairs, dining room table, drapes/shades, kitchen table\n                    and chairs, stools, carpets/rugs, trash cans, bedside tables, lamps, coffee table items, book\n                    shelves, fireplace, and outdoor items.- Replacing broken/outdated items- Placing items in\n                    appropriate area in consultation with “organizing” cardholder",
+    "minimumStandardOfCare": "Once you agree on a plan for what your home should look like, is that plan\n                  implemented?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Home Goods and Supplies",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e964d658a96046184b48_Fairplay_RegularCards_Page_015a.png",
+    "category": "Home",
+    "definition": "This card requires CPE of everything from laundry detergent, batteries, and\n                  lightbulbs, to toothpaste, coffee filters, and trash bags! Expect to be astounded by how your parents’\n                  generation pulled this off without Amazon.",
+    "planning": "- Creating an inventory/making a master list (detergent, cleaning supplies, paper products,\n                    batteries, office supplies, bathroom supplies / toiletries/ Ziplock bags, Tupperware, lunch boxes)-\n                    Checking supplies for what is low",
+    "execution": "- Shopping- Loading and unloading goods/supplies- Placing items in appropriate area in consultation\n                    with “organizing” cardholder",
+    "minimumStandardOfCare": "Is there regular replenishment of home goods / are the goods &amp; supplies there\n                  when you need them? Are they in the appropriate place when you need them? (i.e the toilet paper back\n                  on the holder)",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Home Maintenance",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e9645a747f2a151e96c8_Fairplay_RegularCards_Page_016a.png",
+    "category": "Home",
+    "definition": "How many people does it take to change a lightbulb? In this game, just one, and\n                  it’s the person holding this card. You’re also responsible for unclogging toilets, calling a repairman\n                  when the air conditioner breaks (inevitably in the height of summer), finding the manual for the\n                  vacuum cleaner that’s spewing dust, and every other home maintenance to-do that requires hands-on CPE.",
+    "planning": "- Making a master list and keeping track of weekly/monthly/annual home tasks that involve\n                    maintenance.- Sourcing (if applicable)",
+    "execution": "- Hiring- Ongoing communication and supervision- Making payments- Reimbursing to purchase\n                    suppliesOUTSOURCED- Hiring- Making payments- Communicating and supervising- Placing orders for\n                    parts/broken itemsINSOURCED (DIY FOR MAINTENANCE BELOW.)- Plumbing: toilet, sink, garbage disposal,\n                    water issues (filters, heater, softeners, mineral deposits, inspections), septic tank- Electrical:\n                    light bulbs, light fixtures, wiring- Interior: HVAC, air ducts, smoke detectors, vents, insulation,\n                    cabinets, appliance management, paint, fireplace/chimney, home security, exterminator- Exterior:\n                    roof/siding, tiles, gutters, power washing, pool(cleaning, draining, chemicals, pool skimmer, pool\n                    vacuum), exterior walkway cracks and paint, weather proofing, driveway (snow shoveling etc.)",
+    "minimumStandardOfCare": "Is there someone monitoring and timely handling repairs and upkeep in the home?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Home Purchase/Rental, Mortgage &amp; Insurance",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e966e615caaf8c72b064_Fairplay_RegularCards_Page_017a.png",
+    "category": "Home",
+    "definition": "If you aspire to be a homeowner with a mortgage one day, then when the time comes,\n                  you’ll need to CPE the purchasing process. If you’re already a homeowner with a mortgage, this\n                  cardholder oversees title insurance, reviewing an infinite amount of statements, and possible\n                  refinancing. If you’re looking to rent, then you’ll be the one to scour listings, fill out\n                  applications, and furnish your credit score. You’ll also handle home insurance (whether you rent or\n                  own), including evaluating the appropriate policy and filing claims if needed. Grab this card fast if\n                  paperwork and record-keeping are your strong suits.",
+    "planning": "- Researching neighborhoods (affordability consulting with “money manager” cardholder, local\n                    schools, parks, safety)- Selecting home Realtor or rental broker, mortgage broker/lender- Attending\n                    open houses and touring homes/apartments- Securing pre-approval from bank for loan (including\n                    managing appraisers)- Managing financial documentation (tax returns, bank statements, income\n                    verification)- Ensuring credit score is up to par- Budgeting for mortgage payment, property\n                    tax/insurance, assessments and other homeowner expenses- Researching homeowners/renters insurance\n                    and other possible other options (earthquake, flood, etc.)",
+    "execution": "- Making offer (process) and managing closing- Attending and managing inspections- Making down\n                    payment money available- Purchasing homeowners/renters insurance and possible other options",
+    "minimumStandardOfCare": "Do you have keys to your pad? Plus insurance for your home and most important\n                  items?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Hosting",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e9666eed94327d279e78_Fairplay_RegularCards_Page_018a.png",
+    "category": "Home",
+    "definition": "Whether it’s a backyard barbecue, potluck dinner, or any other get-together in\n                  your home or elsewhere, hosting often entails sending out invites, planning the menu, filling a vase\n                  with flowers, and setting the table (and maybe a separate one for the kids). The downside to holding\n                  this card: You may forget to have fun at your own shindig as you bend over backward to ensure everyone\n                  else does. The upside: no need for a workout on hosting days, as you will probably hit 10,000 steps\n                  before you sit down to eat (if you get to at all).",
+    "planning": "- Creating plan for the event- Curating guest list- Managing RSVPs- Coordinating what guests may\n                    bring",
+    "execution": "- Sending invitations- Purchasing/rentals: food, drinks, tableware, flowers, music, seating-\n                    Decorating (streamers, balloons, flowers, place cards, centerpieces, confetti)- Hiring\n                    servers/helpers- Setting up- Cleaning up",
+    "minimumStandardOfCare": "Did your guests have a good time and were their expectations met based on the\n                  event?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Laundry",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e9673544132474c9fe7d_Fairplay_RegularCards_Page_019a.png",
+    "category": "Home",
+    "definition": "f you haven’t ever CPE’d this card, would you like to take a guess at how many\n                  loads of laundry your family generates weekly? A freakin’ lot, that’s my guess. If you never go a day\n                  without clean socks and your daughter can always find her favorite rainbow shirt, then be sure to\n                  thank this cardholder, who not only throws the load in the washer and dryer but also folds it and puts\n                  it all away. If laundry tends to pile up and multiply in your home, it’s time to re-deal this card and\n                  come up with a new standard before the next cycle begins.",
+    "planning": "- Sorting clothes and reviewing clothing instructions (colors/whites/delicates)",
+    "execution": "- Spraying stains pre-wash- Washing/drying- Ironing/steaming- Hanging, folding, putting away",
+    "minimumStandardOfCare": "Are there laundered clothes when you need them where you need them in their place\n                  in the respective closets? (i.e not all over the floor or wrinkled in the dryer)",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Lawn &amp; Plants",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e967258c5a65a3868515_Fairplay_RegularCards_Page_020a.png",
+    "category": "Home",
+    "definition": "If you’ve got a lawn, a backyard or balcony vegetable garden, or just a struggling\n                  succulent by your kitchen window, then you know it takes careful CPE to keep your greenery alive, no\n                  less thriving. Even if you have a helpful gardener to lend you his or her green thumb, it’s still on\n                  you to keep an eye on limp or leggy plants that may need a shot of Miracle-Gro.",
+    "planning": "- Researching appropriate plants for home (climate, sunlight exposure, seasonal, water\n                    usage/drought resistance)- Defining maintenance plan- Managing weather conditionsOUTSOURCED\n                    (LANDSCAPE, GARDENER, LAWN MOWER, ETC.)- Sourcing",
+    "execution": "- Executing maintenance plan- System control (sprinkler set-up, daylight saving times, stay\n                    apprised of local laws on watering)- Purchasing seeds, flowers, plants, fertilizer, sod, mulch,\n                    soil, shovels, gloves, trimming supplies, chain saw, wheel barrel- Lawn/garden maintenance (mowing,\n                    fertilizing, weeds and pesticides)- Pest control: monitor pet/animal/insect prevention-\n                    Pruning/trimming/raking/citrus removal: trees, bushes, flowers- Hiring- Paying- Managing and\n                    communicating (including access plan)",
+    "minimumStandardOfCare": "Are your plants/lawn alive with no safety hazards?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Mail",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e968293b241360be3923_Fairplay_RegularCards_Page_021a.png",
+    "category": "Home",
+    "definition": "Is the mail coming in every day and getting sorted in a timely manner? Do packages\n                  need to be picked up before they are shipped back to the sender?",
+    "planning": "",
+    "execution": "",
+    "minimumStandardOfCare": "Is the mail coming in everyday and getting sorted in a timely manner? Do packages\n                  need to be picked up before they are shipped back to the sender?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Meals (School Lunch)",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96935f8911e425c9d63_Fairplay_RegularCards_Page_023a.png",
+    "category": "Home",
+    "definition": "If you’re this cardholder, toss the idea of a relaxing night out the window\n                  because it’s time to start packing lunch for the kids. Don’t let all the #schoollunch pics on\n                  Instagram get you down. Your Fair Play Minimum Standard of Care could be a protein bar, an apple, and\n                  a bottle of water if that’s all your kid will eat. And even if your child’s school provides lunch, you\n                  still have to take the lead and sign up for this program and provide lunch money to cover pizza\n                  Fridays.",
+    "planning": "INSOURCED- Menu and snack planning and purchasing containers (give list of items needed to “home\n                    goods and supplies” cardholder or purchase yourself)OUTSOURCED- Log into school portal to order\n                    school lunch and/or add money to account (exception: all other school forms go to “school forms”\n                    cardholder)",
+    "execution": "- Preparing and packing into container (including filling daily water bottle and providing\n                    utensils/ice packs)- Staying apprised of what child is eating/not eating",
+    "minimumStandardOfCare": "Do the kids have a reasonably nutritious meal in their backpack every day and/or\n                  is it ordered and paid for (access to money)?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Meals (Weekday Breakfast)",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96a1a40cf4d58ccb297_Fairplay_RegularCards_Page_022a.png",
+    "category": "Home",
+    "definition": "One mom I spoke to lamented that she’s held this card every single day since her\n                  kids were old enough to eat solids. Every. Single. Day. Prepare to frequently re-deal full CPE of this\n                  nonnegotiable Daily Grind unless serving oatmeal and toast at breakneck speed is your jam. Dishes left\n                  in the sink and milk spilled on the counter isn’t “on you” unless you hold the “dishes” and “tidying”\n                  cards. Still, be respectful before you zoom out the door.",
+    "planning": "- Menu planning/recipe selection- Making lists of items needed (give to “groceries” cardholder with\n                    appropriate amount of time or purchase yourself)",
+    "execution": "- Cooking/preparing- Serving- Putting dishes in sink for “dishes” cardholder",
+    "minimumStandardOfCare": "Is your family fed a reasonably nutritious meal during the appropriate time window\n                  for each meal?",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Meals (Weekday Dinner)",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96cc826fee786d5e4c8_Fairplay_RegularCards_Page_024a.png",
+    "category": "Home",
+    "definition": "If you have never CPE’d dinnertime in a family with kids (particularly young\n                  ones), then no words can really do justice to this nightly circus. The ringleader plans a weekly menu,\n                  consults the “groceries” cardholder to have the ingredients at home, then cooks, ensures that the food\n                  actually gets eaten, and ideally uses this forced family time to have “quality” conversations about\n                  everyone’s day. Men: Kudos to you if cooking is one of your domestic contributions, but that’s just\n                  one word on this doozy of a card. Hero status isn’t awarded for just pulling out a frying pan.",
+    "planning": "- Menu planning/recipe selection- Making lists of items needed (give to “groceries” cardholder with\n                    appropriate amount of time or purchase yourself)",
+    "execution": "- Cooking/preparing- Serving- Putting dishes in sink for “dishes” cardholder",
+    "minimumStandardOfCare": "Is your family fed a reasonably nutritious meal during the appropriate time window\n                  for each meal. (i.e Lunch at 4 pm doesn’t cut it when kids last ate at 8 am.)",
+    "isDailyGrind": true
+  },
+  {
+    "title": "Meals (Weekend)",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96ee919b67f8aa37f73_Fairplay_RegularCards_Page_025a.png",
+    "category": "Home",
+    "definition": "Why do weekend meals feel more burdensome than weekday meals? Oh, let us count the\n                  ways. Maybe it’s because there are twice as many of them than on a school day. Perhaps it’s because\n                  they amplify the kitchen mess exponentially. Or because when you make it to Saturday night, you’re\n                  still only halfway there. Weekend meals deserve their own card—who wants it? Psst. Serving lunch at 4\n                  p.m. doesn’t cut it unless midday meltdowns are your thing.",
+    "planning": "- Menu planning/recipe selection- Making lists of items needed (give to “groceries” cardholder with\n                    appropriate amount of time or purchase yourself)- Determining meals eaten out or with friends/family",
+    "execution": "- Cooking/preparing- Serving- Putting dishes in sink for “dishes” cardholder",
+    "minimumStandardOfCare": "Are you monitoring the time and making sure your kids are being fed during the\n                  appropriate window?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Memories &amp; Photos",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96ff497f53c044d014d_Fairplay_RegularCards_Page_026a.png",
+    "category": "Home",
+    "definition": "God bless those parents who make photo albums every year and who can rest assured\n                  that if the basement flooded, all their old photos are scanned and backed up in the cloud. No need to\n                  aim that high, but if you hold this card, your family’s lifelong memories are nevertheless in your\n                  hands. When a photo collage is needed for “Student of the Week,” it’s time to cue the music . . . and\n                  kiss some of your time goodbye. When the boxes of your child’s artwork that you’ve been collecting\n                  since kindergarten threaten to take over every wall in your home, it’s time to consult with the\n                  “storage” and “organizing” cardholder. Do we keep it all or secretly recycle?",
+    "planning": "- Researching photo storage and back up options: cloud options by storage fees and functionality\n                    and/or hard drive- Signing up for cloud accounts including managing user name and passwords-\n                    Arranging family photo shoots",
+    "execution": "- Taking pictures- Organizing digital photos into folders- Creating photo books and/or printing\n                    photos- Digitizing old photos (scan, upload, file)- Creating home videos / photo montages",
+    "minimumStandardOfCare": "Are the appropriate photos readily accessible when you need them? Are you\n                  capturing memories you desire?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Money Manager",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e96f1a40cf1646ccb29e_Fairplay_RegularCards_Page_027a.png",
+    "category": "Home",
+    "definition": "If you’re taking the lead on this card, you are intrepid because managing a\n                  family’s budget is no small feat. Planning for the present and preparing for the future is a good\n                  start, but there’s so much more to CPEing this card. Short and long-time budgeting. Paying off debt.\n                  Retirement planning. College savings and 401(k) investments. And of course there’s also the fun that\n                  rolls around every April 15. Day-to-day “cash and bills” is a separate card, and these cardholders\n                  will collaborate often.",
+    "planning": "- Researching investments etc. (self)- Researching broker/investment adviser/online brokerage and\n                    all issues related to retirement, college, emergency funds etc.- Tax planning",
+    "execution": "- Managing investment accounts (including 401k/retirement and college funds) with financial\n                    adviser/online broker (in or Outsourced)- Managing family budget (income and expenses)- Tax receipt\n                    and form collecting and filing appropriate forms (self, tax preparation software, or with\n                    accountant)- Depositing checks in bank account",
+    "minimumStandardOfCare": "Do you have a budget / financial plan? Are you intentional about for planning for\n                  the future? Are you on the same page with paying off debt and are taxes filed on time (or an\n                  appropriate agreed up extension)?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Storage, Garage, &amp; Seasonal Items",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e972024723c72f79036c_Fairplay_RegularCards_Page_028a.png",
+    "category": "Home",
+    "definition": "If you have a storage unit or a garage, do you have any idea what’s inside it? If\n                  not, now is the time to get it organized and have a CPE plan in place before someone asks, “Honey,\n                  where’s Zach’s sleeping bag? He has a sleepover tonight.”",
+    "planning": "·&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inventory management of summer/beach/lake/camping/",
+    "execution": "·&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Managing items in garage (place in bins, racks, shelving etc.)\n                    orgive away to “tidying up, organizing, and donations” cardholder)",
+    "minimumStandardOfCare": "Is the garage or unit reasonably organized? Can you find things when you need\n                  them?",
+    "isDailyGrind": false
+  },
+  {
+    "title": "Tidying up, Organizing &amp; Donations",
+    "image": "https://cdn.prod.website-files.com/61bbbd264d65f81bc2ccf1eb/61d4e972ad76a06e9148749a_Fairplay_RegularCards_Page_029a.png",
+    "category": "Home",
+    "definition": "This never-ending work includes making beds, putting toys away, finding the Legos\n                  under the couch (preferably before you buy a whole new set), and wrapping up the half a banana sitting\n                  on the counter before fruit flies infest your home. This 784card is a hot-button issue for many\n                  couples who often disagree on a standard for “tidy,” so before one of you claims it, get specific\n                  about how long you can both live with the toy closet that’s bursting at the seams, all the random crap\n                  accumulating under the stairwell, and the donation bags that have been sitting in the trunk of the\n                  family car for months. Unless your aspiration is to star on Hoarders (and your partner agrees to\n                  costar), you may want to binge a few episodes of Tidying Up with Marie Kondo.",
+    "planning": "- Developing a system for organizing your physical home: closets, kitchen/pantry, bedrooms,\n                    playroom, office etc. and digital home: organizing computer files in consultation with “memories and\n                    photos” cardholder- Taking stock of what children are currently playing with and what you can\n                    donate/ hand down- Creating list of donated items and value for tax purposes- Researching options\n                    for where items will be donated or family/friends to hand down to- Identifying storage needs and\n                    measuring storage space",
+    "execution": "- Clearing/wiping counters- Putting away toys and shoes- Tidying throw blankets and pillows- Safely\n                    storing important documents, including birth certificates, passports and Social Security cards-\n                    Gathering items to be donated from “clothes and accessories (kids)” and “wardrobe (her/his)”\n                    cardholders- Dropping off donations- Purchasing storage and organizational containers- Putting\n                    together/building storage container",
+    "minimumStandardOfCare": "Does every item in your home have a proper place and is there a system to get them\n                  there? Are those that don’t get donated?",
+    "isDailyGrind": false
+  }
+]

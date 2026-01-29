@@ -3,475 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ukulele Tuner</title>
+    <title>Tools Directory</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-            background: #f5f5f5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
         }
+        
         .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.85);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .tool-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        #startButton {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 20px 0;
-        }
-        #startButton:hover {
-            background: #45a049;
-        }
-        #noteDisplay {
-            font-size: 48px;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        #tuningDisplay {
-            font-size: 24px;
-            margin: 10px 0;
-            color: #666;
-        }
-        .note-container {
+            border-radius: 16px;
+            padding: 28px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 10px 20px rgba(0,0,0,0.04);
             display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
+            font-size: 24px;
         }
-        .note {
-            padding: 10px 20px;
-            border-radius: 5px;
-            background: #eee;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+        
+        .tool-card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a1a2e;
         }
-        .note:hover {
-            background: #e0e0e0;
+        
+        .tool-card p {
+            font-size: 0.95rem;
+            color: #6b7280;
+            line-height: 1.5;
+            flex-grow: 1;
         }
-        .note.active {
-            background: #4CAF50;
-            color: white;
-            border-color: #2E7D32;
+        
+        .tool-card .arrow {
+            color: #9ca3af;
+            font-size: 1.25rem;
+            align-self: flex-end;
+            transition: transform 0.2s ease, color 0.2s ease;
         }
-        .note.selected {
-            border-color: #2196F3;
-            background: #E3F2FD;
+        
+        .tool-card:hover .arrow {
+            transform: translateX(4px);
+            color: #667eea;
         }
-        .note.playing {
-            animation: pulse 1s infinite;
+        
+        /* Icon colors */
+        .icon-music { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .icon-image { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .icon-timer { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .icon-voice { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .icon-cards { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        .note::after {
-            content: '🔊';
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .note:hover::after {
-            opacity: 1;
-        }
-        .note.selected::after {
-            opacity: 1;
-        }
-        #tuningMeter {
-            width: 300px;
-            height: 100px;
-            margin: 20px auto;
-        }
-        .accuracy-label {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .tool-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Ukulele Tuner</h1>
-        <div class="note-container">
-            <div class="note">G</div>
-            <div class="note">C</div>
-            <div class="note">E</div>
-            <div class="note">A</div>
+        <header>
+            <h1>Tools Directory</h1>
+            <p class="subtitle">A collection of useful browser-based utilities</p>
+        </header>
+        
+        <div class="tools-grid">
+            <a href="ukulele-tuner.html" class="tool-card">
+                <div class="tool-icon icon-music">🎸</div>
+                <h2>Ukulele Tuner</h2>
+                <p>Tune your ukulele using your microphone. Detects notes in real-time and shows how far off you are.</p>
+                <span class="arrow">&rarr;</span>
+            </a>
+            
+            <a href="guitar-tuner.html" class="tool-card">
+                <div class="tool-icon icon-music">🎵</div>
+                <h2>Guitar Tuner</h2>
+                <p>Tune your guitar with real-time pitch detection. Works with acoustic and electric guitars.</p>
+                <span class="arrow">&rarr;</span>
+            </a>
+            
+            <a href="image-editor.html" class="tool-card">
+                <div class="tool-icon icon-image">🖼️</div>
+                <h2>Image Editor</h2>
+                <p>Edit and crop images right in your browser. No uploads required - everything stays local.</p>
+                <span class="arrow">&rarr;</span>
+            </a>
+            
+            <a href="test-timer.html" class="tool-card">
+                <div class="tool-icon icon-timer">⏱️</div>
+                <h2>Test Timer</h2>
+                <p>Multiple countdown timers for tests, exams, or any timed activities. Clean and distraction-free.</p>
+                <span class="arrow">&rarr;</span>
+            </a>
+            
+            <a href="voice-validator.html" class="tool-card">
+                <div class="tool-icon icon-voice">🎤</div>
+                <h2>Voice Validator</h2>
+                <p>Record your voice and play it back. Useful for pronunciation practice and speech validation.</p>
+                <span class="arrow">&rarr;</span>
+            </a>
+            
+            <a href="cards/survey.html" class="tool-card">
+                <div class="tool-icon icon-cards">🃏</div>
+                <h2>Card Survey</h2>
+                <p>Interactive card display and survey tool. Browse and interact with card collections.</p>
+                <span class="arrow">&rarr;</span>
+            </a>
         </div>
-        <div id="noteDisplay">-</div>
-        <canvas id="tuningMeter" width="600" height="200"></canvas>
-        <div class="accuracy-label">← Too Low | Perfect | Too High →</div>
-        <div id="tuningDisplay">Start tuning to see feedback</div>
-        <button id="startButton">Start Tuning</button>
+        
+        <footer>
+            <p>Built with care by Parker Barker</p>
+        </footer>
     </div>
-
-    <script>
-        // Standard ukulele tuning frequencies (in Hz)
-        const TUNING = {
-            'G4': 392.00,
-            'C4': 261.63,
-            'E4': 329.63,
-            'A4': 440.00
-        };
-
-        let audioContext = null;
-        let analyser = null;
-        let mediaStream = null;
-
-        // Add smoothing factor for meter movement
-        const SMOOTHING_FACTOR = 0.8;
-        let lastCents = 0;
-
-        // Initialize meter
-        const canvas = document.getElementById('tuningMeter');
-        const ctx = canvas.getContext('2d');
-        const meterWidth = canvas.width;
-        const meterHeight = canvas.height;
-
-        function drawMeter(cents) {
-            // Smooth the cents value for more stable display
-            lastCents = lastCents * SMOOTHING_FACTOR + cents * (1 - SMOOTHING_FACTOR);
-            
-            ctx.clearRect(0, 0, meterWidth, meterHeight);
-            
-            // Draw background
-            ctx.fillStyle = '#f0f0f0';
-            ctx.fillRect(0, 0, meterWidth, meterHeight);
-            
-            // Draw center line
-            const centerX = meterWidth / 2;
-            ctx.strokeStyle = '#666';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, meterHeight);
-            ctx.stroke();
-            
-            // Draw tolerance zones
-            const toleranceWidth = 50;
-            ctx.fillStyle = '#4CAF50';
-            ctx.fillRect(centerX - toleranceWidth/2, 0, toleranceWidth, meterHeight);
-            
-            // Draw needle
-            const needlePos = centerX + (lastCents * 3);
-            ctx.beginPath();
-            ctx.moveTo(needlePos, 0);
-            ctx.lineTo(needlePos - 10, meterHeight);
-            ctx.lineTo(needlePos + 10, meterHeight);
-            ctx.fillStyle = Math.abs(lastCents) < 5 ? '#4CAF50' : '#ff6b6b';
-            ctx.fill();
-        }
-
-        // Audio synthesis setup
-        let oscillator = null;
-        let gainNode = null;
-
-        // Create and configure audio nodes for reference tones
-        function setupToneGenerator() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            
-            oscillator = audioContext.createOscillator();
-            gainNode = audioContext.createGain();
-            
-            // Configure oscillator
-            oscillator.type = 'sine';
-            
-            // Configure gain (volume) node
-            gainNode.gain.value = 0;
-            
-            // Connect nodes
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            // Start oscillator (it will be silent until we set gain > 0)
-            oscillator.start();
-        }
-
-        // Play reference tone with smooth fade in/out
-        async function playReferenceTone(noteName, duration = 2000) {
-            if (!oscillator) {
-                setupToneGenerator();
-            }
-
-            const frequency = TUNING[noteName];
-            const noteElement = Array.from(document.querySelectorAll('.note'))
-                .find(el => el.textContent === noteName[0]);
-            
-            if (!noteElement) {
-                console.error('Note element not found:', noteName);
-                return;
-            }
-            
-            // Update oscillator frequency
-            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-            
-            // Add playing animation
-            noteElement.classList.add('playing');
-            
-            // Fade in
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.1);
-            
-            // Wait for duration
-            await new Promise(resolve => setTimeout(resolve, duration - 200));
-            
-            // Fade out
-            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.2);
-            
-            // Remove playing animation
-            setTimeout(() => {
-                noteElement.classList.remove('playing');
-            }, 200);
-        }
-
-        // Add click handlers for reference tones
-        document.querySelectorAll('.note').forEach(noteElem => {
-            noteElem.addEventListener('click', async () => {
-                console.log('Note clicked:', noteElem.textContent);
-                
-                // Remove selected class from all notes first
-                document.querySelectorAll('.note').forEach(el => {
-                    el.classList.remove('selected');
-                });
-                
-                // Add selected class to clicked note
-                noteElem.classList.add('selected');
-                
-                const note = noteElem.textContent + '4';
-                console.log('Full note name:', note);
-                console.log('Target frequency:', TUNING[note]);
-                await playReferenceTone(note);
-            });
-        });
-
-        // Cleanup function for audio nodes
-        function cleanupAudio() {
-            if (oscillator) {
-                oscillator.stop();
-                oscillator.disconnect();
-                oscillator = null;
-            }
-            if (gainNode) {
-                gainNode.disconnect();
-                gainNode = null;
-            }
-        }
-
-        // Update the start/stop button handler
-        document.getElementById('startButton').addEventListener('click', async () => {
-            try {
-                if (!audioContext) {
-                    // Initialize Audio Context
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    
-                    // Get microphone access
-                    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    
-                    // Create audio nodes
-                    const source = audioContext.createMediaStreamSource(mediaStream);
-                    analyser = audioContext.createAnalyser();
-                    analyser.fftSize = 2048;
-                    
-                    // Connect nodes
-                    source.connect(analyser);
-                    
-                    // Setup tone generator
-                    setupToneGenerator();
-                    
-                    // Start pitch detection
-                    requestAnimationFrame(updatePitch);
-                    
-                    document.getElementById('startButton').textContent = 'Stop Tuning';
-                    document.getElementById('tuningDisplay').textContent = 'Listening...';
-                } else {
-                    // Stop everything
-                    if (mediaStream) {
-                        mediaStream.getTracks().forEach(track => track.stop());
-                        mediaStream = null;
-                    }
-                    cleanupAudio();
-                    if (audioContext) {
-                        await audioContext.close();
-                        audioContext = null;
-                    }
-                    analyser = null;
-                    
-                    document.getElementById('startButton').textContent = 'Start Tuning';
-                    document.getElementById('tuningDisplay').textContent = 'Start tuning to see feedback';
-                    document.getElementById('noteDisplay').textContent = '-';
-                    drawMeter(0);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                // Clean up any partially initialized resources
-                if (mediaStream) {
-                    mediaStream.getTracks().forEach(track => track.stop());
-                    mediaStream = null;
-                }
-                cleanupAudio();
-                if (audioContext) {
-                    await audioContext.close();
-                    audioContext = null;
-                }
-                analyser = null;
-                
-                document.getElementById('tuningDisplay').textContent = 
-                    'Error accessing microphone. Please ensure microphone permissions are granted.';
-                document.getElementById('startButton').textContent = 'Start Tuning';
-            }
-        });
-
-        // Enhanced autocorrelation with better noise filtering
-        function autoCorrelate(buffer, sampleRate) {
-            // Apply Hanning window to reduce spectral leakage
-            const windowedBuffer = new Float32Array(buffer.length);
-            for (let i = 0; i < buffer.length; i++) {
-                windowedBuffer[i] = buffer[i] * (0.5 * (1 - Math.cos(2 * Math.PI * i / buffer.length)));
-            }
-            
-            // Calculate RMS and apply dynamic threshold
-            let rms = 0;
-            for (let i = 0; i < buffer.length; i++) {
-                rms += windowedBuffer[i] * windowedBuffer[i];
-            }
-            rms = Math.sqrt(rms / buffer.length);
-            
-            // More stringent noise threshold
-            if (rms < 0.015) return -1;
-
-            let correlations = new Array(buffer.length).fill(0);
-            
-            // Normalized Square Difference Function (NSDF) for better peak detection
-            for (let lag = 0; lag < buffer.length; lag++) {
-                let sum = 0;
-                let normalizer = 0;
-                
-                for (let i = 0; i < buffer.length - lag; i++) {
-                    sum += windowedBuffer[i] * windowedBuffer[i + lag];
-                    normalizer += windowedBuffer[i] * windowedBuffer[i] + 
-                                windowedBuffer[i + lag] * windowedBuffer[i + lag];
-                }
-                
-                correlations[lag] = 2 * sum / (normalizer + Number.EPSILON);
-            }
-
-            // Find the best peak using parabolic interpolation
-            let maxCorrelation = -1;
-            let maxLag = -1;
-            
-            // Skip the first few samples to avoid sub-harmonics
-            for (let lag = 32; lag < correlations.length; lag++) {
-                if (correlations[lag] > maxCorrelation && 
-                    correlations[lag] > correlations[lag - 1] && 
-                    correlations[lag] > correlations[lag + 1]) {
-                    
-                    // Parabolic interpolation for better frequency accuracy
-                    const alpha = correlations[lag - 1];
-                    const beta = correlations[lag];
-                    const gamma = correlations[lag + 1];
-                    const peak = lag + (gamma - alpha) / (2 * (2 * beta - gamma - alpha));
-                    
-                    maxCorrelation = correlations[lag];
-                    maxLag = peak;
-                }
-            }
-
-            // Additional confidence check
-            if (maxCorrelation < 0.5) return -1;
-
-            return sampleRate / maxLag;
-        }
-
-        function updatePitch() {
-            if (!audioContext) return;
-
-            const bufferLength = analyser.frequencyBinCount;
-            const timeData = new Float32Array(bufferLength);
-            analyser.getFloatTimeDomainData(timeData);
-
-            const pitch = autoCorrelate(timeData, audioContext.sampleRate);
-            
-            if (pitch !== -1) {
-                const note = getNote(pitch);
-                const cents = getCents(pitch, note.frequency);
-                
-                // Update displays
-                document.getElementById('noteDisplay').textContent = note.name;
-                
-                // Draw the tuning meter
-                drawMeter(cents);
-                
-                let guidance = '';
-                if (Math.abs(cents) < 5) {
-                    guidance = '✓ In tune!';
-                } else {
-                    guidance = cents > 0 ? '↓ Tune down' : '↑ Tune up';
-                    guidance += ` (${Math.abs(cents.toFixed(1))} cents)`;
-                }
-                document.getElementById('tuningDisplay').textContent = guidance;
-
-                // Update note indicators - now handles both active (tuning) and selected (reference) states
-                const currentNoteChar = note.name.charAt(0);
-                document.querySelectorAll('.note').forEach(noteElem => {
-                    if (noteElem.textContent === currentNoteChar) {
-                        noteElem.classList.add('active');
-                    } else {
-                        noteElem.classList.remove('active');
-                    }
-                    // Don't remove the selected class here - let it persist
-                });
-            } else {
-                // Clear the display when no pitch is detected
-                drawMeter(0);
-                document.getElementById('tuningDisplay').textContent = 'No pitch detected';
-                document.getElementById('noteDisplay').textContent = '-';
-                // Remove only active class, keep selected state
-                document.querySelectorAll('.note').forEach(noteElem => {
-                    noteElem.classList.remove('active');
-                });
-            }
-
-            requestAnimationFrame(updatePitch);
-        }
-
-        // Get the closest note for a given frequency
-        function getNote(frequency) {
-            // Find the closest note in our TUNING object
-            let closestNote = null;
-            let closestDistance = Infinity;
-
-            for (const [note, freq] of Object.entries(TUNING)) {
-                const distance = Math.abs(frequency - freq);
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestNote = { name: note, frequency: freq };
-                }
-            }
-
-            return closestNote;
-        }
-
-        // Calculate cents deviation from target frequency
-        function getCents(frequency, targetFrequency) {
-            return 1200 * Math.log2(frequency / targetFrequency);
-        }
-    </script>
 </body>
 </html>

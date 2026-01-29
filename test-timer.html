@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Timer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 20px;
+            background: linear-gradient(135deg, #f7f7f7 0%, #f0f0f0 100%);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+        .container {
+            background: transparent;
+            padding: 0;
+        }
+        .timers-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 0;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 24px 16px;
+            }
+            .timers-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .timer-card {
+                padding: 16px;
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .timer-controls {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .timer-controls button {
+                flex: 1;
+                min-width: 60px;
+            }
+            .timer-display {
+                font-size: 64px;
+            }
+            #countdownDisplay {
+                font-size: 72px;
+            }
+        }
+        .timer-card {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            animation: cardFadeIn 0.5s ease-out;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: stretch;
+            min-height: 160px;
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .timer-card.active {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
+            box-shadow: 
+                0 15px 40px rgba(76, 175, 80, 0.12),
+                0 8px 20px rgba(76, 175, 80, 0.08);
+            transform: translateY(-2px);
+        }
+        .timer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            height: 100%;
+            min-height: 140px;
+            justify-content: center;
+        }
+        .timer-display {
+            font-size: 115px;
+            font-weight: 600;
+            margin: 0;
+            color: #1a1a1a;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.03em;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            line-height: 0.9;
+            width: 100%;
+            display: block;
+        }
+        #countdownDisplay {
+            font-size: 115px;
+        }
+        .timer-display.updating {
+            opacity: 0.6;
+            transform: scale(0.98);
+        }
+        .timer-display.warning {
+            color: #d97757;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.85;
+            }
+        }
+        .timer-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+            justify-content: center;
+        }
+        .timer-controls button {
+            width: 100%;
+            min-width: 50px;
+        }
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                0 1px 2px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        button:active:not(:disabled)::before {
+            width: 200px;
+            height: 200px;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 
+                0 1px 2px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #5cb85c 0%, #4a9d4a 100%);
+            color: white;
+            box-shadow: 
+                0 3px 6px rgba(92, 184, 92, 0.25),
+                0 1px 3px rgba(92, 184, 92, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .btn-start:hover:not(:disabled) {
+            background: linear-gradient(135deg, #4a9d4a 0%, #3d8b3d 100%);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 8px rgba(92, 184, 92, 0.3),
+                0 2px 4px rgba(92, 184, 92, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        .btn-start:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 4px rgba(92, 184, 92, 0.25),
+                0 1px 2px rgba(92, 184, 92, 0.2),
+                inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .btn-stop {
+            background: linear-gradient(135deg, #d97757 0%, #c4694a 100%);
+            color: white;
+            box-shadow: 
+                0 3px 6px rgba(217, 119, 87, 0.25),
+                0 1px 3px rgba(217, 119, 87, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .btn-stop:hover:not(:disabled) {
+            background: linear-gradient(135deg, #c4694a 0%, #b05a3d 100%);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 8px rgba(217, 119, 87, 0.3),
+                0 2px 4px rgba(217, 119, 87, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        .btn-stop:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 4px rgba(217, 119, 87, 0.25),
+                0 1px 2px rgba(217, 119, 87, 0.2),
+                inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .btn-reset {
+            background: linear-gradient(135deg, #6b6b6b 0%, #5a5a5a 100%);
+            color: white;
+            font-size: 22px;
+            box-shadow: 
+                0 3px 6px rgba(107, 107, 107, 0.25),
+                0 1px 3px rgba(107, 107, 107, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .btn-reset:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5a5a5a 0%, #4a4a4a 100%);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 8px rgba(107, 107, 107, 0.3),
+                0 2px 4px rgba(107, 107, 107, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        .btn-reset:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 4px rgba(107, 107, 107, 0.25),
+                0 1px 2px rgba(107, 107, 107, 0.2),
+                inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .timer-status {
+            font-size: 14px;
+            color: #6b6b6b;
+            margin-top: 12px;
+            min-height: 20px;
+            font-weight: 400;
+            transition: opacity 0.3s ease;
+            grid-column: 1 / -1;
+            display: none;
+        }
+        .timer-status:not(:empty) {
+            display: block;
+        }
+        .interval-indicator {
+            font-size: 13px;
+            color: #8b8b8b;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+        .duration-input {
+            margin: 24px 0;
+        }
+        .duration-input label {
+            display: block;
+            font-size: 13px;
+            color: #6b6b6b;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        .duration-input input {
+            width: 70px;
+            padding: 6px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .duration-input input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .duration-input input:disabled {
+            background: #f0f0f0;
+            cursor: not-allowed;
+        }
+        .volume-control {
+            margin: 24px 0;
+        }
+        .volume-control label {
+            display: block;
+            font-size: 13px;
+            color: #6b6b6b;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        .volume-control-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .volume-control input[type="range"] {
+            flex: 1;
+            height: 5px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+        .volume-control input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: none;
+        }
+        .volume-control input[type="range"]:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .volume-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b6b6b;
+            min-width: 35px;
+            text-align: right;
+        }
+        .btn-test {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            font-size: 11px;
+            padding: 6px 12px;
+            margin-top: 6px;
+            box-shadow: 
+                0 2px 4px rgba(33, 150, 243, 0.25),
+                0 1px 2px rgba(33, 150, 243, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .btn-test:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 3px 6px rgba(33, 150, 243, 0.3),
+                0 2px 4px rgba(33, 150, 243, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        .btn-test:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 
+                0 1px 2px rgba(33, 150, 243, 0.25),
+                inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .settings-toggle {
+            background: linear-gradient(135deg, #8b8b8b 0%, #6b6b6b 100%);
+            color: white;
+            font-size: 22px;
+            padding: 10px 14px;
+            margin: 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 3px 6px rgba(107, 107, 107, 0.25),
+                0 1px 3px rgba(107, 107, 107, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .settings-toggle:hover {
+            background: linear-gradient(135deg, #6b6b6b 0%, #5a5a5a 100%);
+            transform: translateY(-1px) rotate(90deg);
+            box-shadow: 
+                0 4px 8px rgba(107, 107, 107, 0.3),
+                0 2px 4px rgba(107, 107, 107, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        .settings-toggle:active {
+            transform: translateY(0) rotate(90deg) scale(0.95);
+            box-shadow: 
+                0 2px 4px rgba(107, 107, 107, 0.25),
+                0 1px 2px rgba(107, 107, 107, 0.2),
+                inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .settings-section {
+            display: none;
+            margin: 0 0 16px 0;
+            animation: slideDown 0.2s ease-out;
+            grid-column: 1 / -1;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .settings-section.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timers-container">
+            <!-- Repeating interval timer -->
+            <div class="timer-card" id="intervalTimerCard">
+                <div class="settings-section" id="intervalSettings">
+                    <div class="duration-input">
+                        <label for="intervalMinutes">Duration (minutes):</label>
+                        <input type="number" id="intervalMinutes" min="1" max="999" value="10" aria-label="Interval duration in minutes">
+                    </div>
+                    <div class="volume-control">
+                        <label for="intervalVolume">Alert Volume:</label>
+                        <div class="volume-control-container">
+                            <input type="range" id="intervalVolume" min="0" max="100" value="20" step="1" aria-label="Interval alert volume">
+                            <span class="volume-value" id="intervalVolumeValue" aria-live="polite">20%</span>
+                        </div>
+                        <button class="btn-test" id="intervalTestSoundBtn" aria-label="Test interval alert sound">Test Sound</button>
+                    </div>
+                </div>
+                <div class="timer-content">
+                    <div class="timer-display" id="intervalDisplay" aria-live="polite" aria-atomic="true">10:00</div>
+                    <div class="interval-indicator" id="intervalIndicator" aria-live="polite">Interval 0</div>
+                </div>
+                <div class="timer-controls">
+                    <button class="btn-start" id="intervalStartBtn" aria-label="Start interval timer">▶</button>
+                    <button class="btn-stop" id="intervalStopBtn" disabled aria-label="Stop interval timer">⏸</button>
+                    <button class="btn-reset" id="intervalResetBtn" aria-label="Reset interval timer">⟳</button>
+                    <button class="settings-toggle" id="intervalSettingsToggle" aria-label="Toggle settings">⚙</button>
+                </div>
+                <div class="timer-status" id="intervalStatus" aria-live="polite"></div>
+            </div>
+
+            <!-- Countdown timer -->
+            <div class="timer-card" id="countdownTimerCard">
+                <div class="settings-section" id="countdownSettings">
+                    <div class="duration-input">
+                        <label for="countdownMinutes">Duration (minutes):</label>
+                        <input type="number" id="countdownMinutes" min="1" max="999" value="60" aria-label="Countdown duration in minutes">
+                    </div>
+                    <div class="volume-control">
+                        <label for="countdownVolume">Alert Volume:</label>
+                        <div class="volume-control-container">
+                            <input type="range" id="countdownVolume" min="0" max="100" value="20" step="1" aria-label="Countdown alert volume">
+                            <span class="volume-value" id="countdownVolumeValue" aria-live="polite">20%</span>
+                        </div>
+                        <button class="btn-test" id="countdownTestSoundBtn" aria-label="Test countdown alert sound">Test Sound</button>
+                    </div>
+                </div>
+                <div class="timer-content">
+                    <div class="timer-display" id="countdownDisplay" aria-live="polite" aria-atomic="true">60:00</div>
+                </div>
+                <div class="timer-controls">
+                    <button class="btn-start" id="countdownStartBtn" aria-label="Start countdown timer">▶</button>
+                    <button class="btn-stop" id="countdownStopBtn" disabled aria-label="Stop countdown timer">⏸</button>
+                    <button class="btn-reset" id="countdownResetBtn" aria-label="Reset countdown timer">⟳</button>
+                    <button class="settings-toggle" id="countdownSettingsToggle" aria-label="Toggle settings">⚙</button>
+                </div>
+                <div class="timer-status" id="countdownStatus" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        'use strict';
+
+        // Constants
+        const CONSTANTS = {
+            TIMER_INTERVAL: 1000, // 1 second in milliseconds
+            DEFAULT_INTERVAL_MINUTES: 10,
+            DEFAULT_COUNTDOWN_MINUTES: 60,
+            DEFAULT_VOLUME: 20,
+            MIN_DURATION: 1,
+            MAX_DURATION: 999,
+            MIN_VOLUME: 0,
+            MAX_VOLUME: 100,
+            WARNING_THRESHOLD_INTERVAL: 60, // seconds
+            WARNING_THRESHOLD_COUNTDOWN: 600, // 10 minutes in seconds
+            BEEP_DURATION: 0.15, // seconds
+            BEEP_FADE_IN: 0.05, // seconds
+            BEEP_VOLUME_MULTIPLIER: 0.3,
+            INTERVAL_BEEP_FREQUENCIES: [800, 1000],
+            COUNTDOWN_BEEP_FREQUENCIES: [600, 500, 400],
+            COUNTDOWN_BEEP_DELAY: 200, // milliseconds
+            STATUS_MESSAGE_DURATION: 2000 // milliseconds
+        };
+
+        // Audio Manager
+        class AudioManager {
+            constructor() {
+                this.audioContext = null;
+                this.activeOscillators = new Set();
+            }
+
+            initAudioContext() {
+                if (!this.audioContext) {
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    } catch (error) {
+                        console.error('Failed to initialize audio context:', error);
+                        return null;
+                    }
+                }
+                return this.audioContext;
+            }
+
+            async resumeContext() {
+                const ctx = this.initAudioContext();
+                if (!ctx) return false;
+                
+                if (ctx.state === 'suspended') {
+                    try {
+                        await ctx.resume();
+                    } catch (error) {
+                        console.error('Failed to resume audio context:', error);
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            createTone(frequency, startTime, duration, volume, delay = 0) {
+                return new Promise((resolve) => {
+                    const playTone = () => {
+                        const ctx = this.initAudioContext();
+                        if (!ctx) {
+                            resolve();
+                            return;
+                        }
+
+                        const oscillator = ctx.createOscillator();
+                        const gainNode = ctx.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(ctx.destination);
+                        
+                        oscillator.frequency.setValueAtTime(frequency, startTime);
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0, startTime);
+                        gainNode.gain.linearRampToValueAtTime(
+                            volume * CONSTANTS.BEEP_VOLUME_MULTIPLIER, 
+                            startTime + CONSTANTS.BEEP_FADE_IN
+                        );
+                        gainNode.gain.linearRampToValueAtTime(0, startTime + duration);
+                        
+                        oscillator.start(startTime);
+                        oscillator.stop(startTime + duration);
+                        
+                        oscillator.onended = () => {
+                            this.activeOscillators.delete(oscillator);
+                            resolve();
+                        };
+                        
+                        this.activeOscillators.add(oscillator);
+                    };
+
+                    if (delay > 0) {
+                        setTimeout(playTone, delay);
+                    } else {
+                        playTone();
+                    }
+                });
+            }
+
+            async playBeep(volumePercent, frequencies) {
+                if (volumePercent === 0 || !frequencies || frequencies.length === 0) {
+                    return;
+                }
+
+                const resumed = await this.resumeContext();
+                if (!resumed) return;
+
+                const volume = Math.max(CONSTANTS.MIN_VOLUME, Math.min(CONSTANTS.MAX_VOLUME, volumePercent)) / 100;
+                const ctx = this.audioContext;
+                const baseTime = ctx.currentTime;
+
+                // Play all tones with appropriate timing
+                for (let i = 0; i < frequencies.length; i++) {
+                    const delay = i * CONSTANTS.COUNTDOWN_BEEP_DELAY;
+                    const startTime = baseTime + (delay / 1000);
+                    
+                    const oscillator = ctx.createOscillator();
+                    const gainNode = ctx.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(ctx.destination);
+                    
+                    oscillator.frequency.setValueAtTime(frequencies[i], startTime);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0, startTime);
+                    gainNode.gain.linearRampToValueAtTime(
+                        volume * CONSTANTS.BEEP_VOLUME_MULTIPLIER, 
+                        startTime + CONSTANTS.BEEP_FADE_IN
+                    );
+                    gainNode.gain.linearRampToValueAtTime(0, startTime + CONSTANTS.BEEP_DURATION);
+                    
+                    oscillator.start(startTime);
+                    oscillator.stop(startTime + CONSTANTS.BEEP_DURATION);
+                    
+                    this.activeOscillators.add(oscillator);
+                    oscillator.onended = () => {
+                        this.activeOscillators.delete(oscillator);
+                    };
+                }
+            }
+
+            cleanup() {
+                this.activeOscillators.forEach(oscillator => {
+                    try {
+                        oscillator.stop();
+                        oscillator.disconnect();
+                    } catch (error) {
+                        // Oscillator may already be stopped
+                    }
+                });
+                this.activeOscillators.clear();
+            }
+        }
+
+        // Timer Class
+        class Timer {
+            constructor(config) {
+                this.config = config;
+                this.timerId = null;
+                this.timeLeft = config.defaultDuration;
+                this.duration = config.defaultDuration;
+                this.isRunning = false;
+                this.isPaused = false;
+                this.intervalCount = 0;
+                
+                this.elements = {
+                    display: document.getElementById(config.displayId),
+                    startBtn: document.getElementById(config.startBtnId),
+                    stopBtn: document.getElementById(config.stopBtnId),
+                    resetBtn: document.getElementById(config.resetBtnId),
+                    status: document.getElementById(config.statusId),
+                    card: document.getElementById(config.cardId),
+                    minutesInput: document.getElementById(config.minutesInputId),
+                    volumeSlider: document.getElementById(config.volumeSliderId),
+                    volumeValue: document.getElementById(config.volumeValueId),
+                    testSoundBtn: document.getElementById(config.testSoundBtnId),
+                    settingsToggle: document.getElementById(config.settingsToggleId),
+                    settings: document.getElementById(config.settingsId)
+                };
+
+                this.validateElements();
+                this.setupEventListeners();
+                this.updateDisplay();
+            }
+
+            validateElements() {
+                const missing = Object.entries(this.elements)
+                    .filter(([key, element]) => !element)
+                    .map(([key]) => key);
+                
+                if (missing.length > 0) {
+                    console.error(`Missing elements for ${this.config.name}:`, missing);
+                }
+            }
+
+            setupEventListeners() {
+                this.elements.startBtn?.addEventListener('click', () => this.start());
+                this.elements.stopBtn?.addEventListener('click', () => this.stop());
+                this.elements.resetBtn?.addEventListener('click', () => this.reset());
+                
+                this.elements.minutesInput?.addEventListener('input', () => this.handleDurationChange());
+                this.elements.volumeSlider?.addEventListener('input', (e) => this.handleVolumeChange(e));
+                this.elements.testSoundBtn?.addEventListener('click', () => this.testSound());
+                
+                this.elements.settingsToggle?.addEventListener('click', () => this.toggleSettings());
+            }
+
+            formatTime(seconds) {
+                const mins = Math.floor(Math.max(0, seconds) / 60);
+                const secs = Math.max(0, seconds) % 60;
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            updateDisplay() {
+                if (!this.elements.display) return;
+                
+                // Add micro-interaction: fade effect on update
+                this.elements.display.classList.add('updating');
+                
+                // Use requestAnimationFrame for smooth transition
+                requestAnimationFrame(() => {
+                    this.elements.display.textContent = this.formatTime(this.timeLeft);
+                    
+                    setTimeout(() => {
+                        this.elements.display.classList.remove('updating');
+                    }, 150);
+                });
+                
+                const warningThreshold = this.config.warningThreshold || CONSTANTS.WARNING_THRESHOLD_COUNTDOWN;
+                if (this.timeLeft <= warningThreshold) {
+                    this.elements.display.classList.add('warning');
+                } else {
+                    this.elements.display.classList.remove('warning');
+                }
+            }
+
+            validateDuration(minutes) {
+                return Math.max(CONSTANTS.MIN_DURATION, Math.min(CONSTANTS.MAX_DURATION, parseInt(minutes) || this.config.defaultDuration / 60));
+            }
+
+            handleDurationChange() {
+                if (this.isRunning) return;
+                
+                const minutes = this.validateDuration(this.elements.minutesInput?.value);
+                this.duration = minutes * 60;
+                this.timeLeft = this.duration;
+                this.updateDisplay();
+            }
+
+            handleVolumeChange(event) {
+                if (!this.elements.volumeValue) return;
+                const value = parseInt(event.target.value) || CONSTANTS.DEFAULT_VOLUME;
+                this.elements.volumeValue.textContent = `${value}%`;
+            }
+
+            getVolume() {
+                return parseInt(this.elements.volumeSlider?.value) || CONSTANTS.DEFAULT_VOLUME;
+            }
+
+            async testSound() {
+                const volume = this.getVolume();
+                await audioManager.playBeep(volume, this.config.beepFrequencies);
+            }
+
+            toggleSettings() {
+                if (!this.elements.settings || !this.elements.settingsToggle) return;
+                
+                const isVisible = this.elements.settings.classList.toggle('visible');
+                // Icon-only, no text change needed
+            }
+
+            start() {
+                if (this.isRunning) return;
+
+                // Initialize duration if not paused
+                if (!this.isPaused) {
+                    const minutes = this.validateDuration(this.elements.minutesInput?.value);
+                    this.duration = minutes * 60;
+                    this.timeLeft = this.duration;
+                    this.updateDisplay();
+                }
+
+                this.isRunning = true;
+                this.isPaused = false;
+                
+                this.updateButtonStates();
+                this.elements.card?.classList.add('active');
+                this.elements.status && (this.elements.status.textContent = 'Running...');
+
+                this.timerId = setInterval(() => this.tick(), CONSTANTS.TIMER_INTERVAL);
+            }
+
+            stop() {
+                if (!this.isRunning) return;
+
+                this.isRunning = false;
+                this.isPaused = true;
+                this.clearTimer();
+                this.updateButtonStates();
+                this.elements.card?.classList.remove('active');
+                this.elements.status && (this.elements.status.textContent = 'Paused');
+            }
+
+            reset() {
+                this.stop();
+                const minutes = this.validateDuration(this.elements.minutesInput?.value);
+                this.duration = minutes * 60;
+                this.timeLeft = this.duration;
+                this.isPaused = false;
+                this.intervalCount = 0;
+                this.updateDisplay();
+                this.updateIndicator();
+                this.elements.status && (this.elements.status.textContent = '');
+            }
+
+            updateButtonStates() {
+                if (this.elements.startBtn) {
+                    this.elements.startBtn.disabled = this.isRunning;
+                }
+                if (this.elements.stopBtn) {
+                    this.elements.stopBtn.disabled = !this.isRunning;
+                }
+                if (this.elements.minutesInput) {
+                    this.elements.minutesInput.disabled = this.isRunning;
+                }
+                if (this.elements.volumeSlider) {
+                    this.elements.volumeSlider.disabled = this.isRunning;
+                }
+            }
+
+            clearTimer() {
+                if (this.timerId) {
+                    clearInterval(this.timerId);
+                    this.timerId = null;
+                }
+            }
+
+            tick() {
+                this.timeLeft--;
+                this.updateDisplay();
+
+                if (this.timeLeft <= 0) {
+                    this.handleTimerComplete();
+                }
+            }
+
+            async handleTimerComplete() {
+                if (this.config.isRepeating) {
+                    this.intervalCount++;
+                    this.timeLeft = this.duration;
+                    this.updateDisplay();
+                    this.updateIndicator();
+                    
+                    const volume = this.getVolume();
+                    await audioManager.playBeep(volume, this.config.beepFrequencies);
+                    
+                    if (this.elements.status) {
+                        this.elements.status.textContent = `Interval ${this.intervalCount} completed!`;
+                        setTimeout(() => {
+                            if (this.isRunning && this.elements.status) {
+                                this.elements.status.textContent = 'Running...';
+                            }
+                        }, CONSTANTS.STATUS_MESSAGE_DURATION);
+                    }
+                } else {
+                    this.stop();
+                    const volume = this.getVolume();
+                    await audioManager.playBeep(volume, this.config.beepFrequencies);
+                    
+                    if (this.elements.display) {
+                        this.elements.display.textContent = '00:00';
+                        this.elements.display.classList.add('warning');
+                        // Pulse animation on completion
+                        this.elements.display.style.animation = 'pulse 0.6s ease-in-out 3';
+                    }
+                    if (this.elements.status) {
+                        this.elements.status.textContent = 'Time\'s up!';
+                    }
+                }
+            }
+
+            updateIndicator() {
+                if (this.config.indicatorId) {
+                    const indicator = document.getElementById(this.config.indicatorId);
+                    if (indicator) {
+                        indicator.textContent = `Interval ${this.intervalCount}`;
+                    }
+                }
+            }
+
+            destroy() {
+                this.clearTimer();
+                audioManager.cleanup();
+            }
+        }
+
+        // Initialize
+        const audioManager = new AudioManager();
+
+        const intervalTimer = new Timer({
+            name: 'interval',
+            defaultDuration: CONSTANTS.DEFAULT_INTERVAL_MINUTES * 60,
+            warningThreshold: CONSTANTS.WARNING_THRESHOLD_INTERVAL,
+            isRepeating: true,
+            beepFrequencies: CONSTANTS.INTERVAL_BEEP_FREQUENCIES,
+            displayId: 'intervalDisplay',
+            startBtnId: 'intervalStartBtn',
+            stopBtnId: 'intervalStopBtn',
+            resetBtnId: 'intervalResetBtn',
+            statusId: 'intervalStatus',
+            cardId: 'intervalTimerCard',
+            minutesInputId: 'intervalMinutes',
+            volumeSliderId: 'intervalVolume',
+            volumeValueId: 'intervalVolumeValue',
+            testSoundBtnId: 'intervalTestSoundBtn',
+            settingsToggleId: 'intervalSettingsToggle',
+            settingsId: 'intervalSettings',
+            indicatorId: 'intervalIndicator'
+        });
+
+        const countdownTimer = new Timer({
+            name: 'countdown',
+            defaultDuration: CONSTANTS.DEFAULT_COUNTDOWN_MINUTES * 60,
+            warningThreshold: CONSTANTS.WARNING_THRESHOLD_COUNTDOWN,
+            isRepeating: false,
+            beepFrequencies: CONSTANTS.COUNTDOWN_BEEP_FREQUENCIES,
+            displayId: 'countdownDisplay',
+            startBtnId: 'countdownStartBtn',
+            stopBtnId: 'countdownStopBtn',
+            resetBtnId: 'countdownResetBtn',
+            statusId: 'countdownStatus',
+            cardId: 'countdownTimerCard',
+            minutesInputId: 'countdownMinutes',
+            volumeSliderId: 'countdownVolume',
+            volumeValueId: 'countdownVolumeValue',
+            testSoundBtnId: 'countdownTestSoundBtn',
+            settingsToggleId: 'countdownSettingsToggle',
+            settingsId: 'countdownSettings'
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            intervalTimer.destroy();
+            countdownTimer.destroy();
+        });
+    </script>
+</body>
+</html>

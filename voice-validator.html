@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Validator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .recording {
+            background: #ffeb3b;
+            color: #000;
+        }
+        .success {
+            background: #4CAF50;
+            color: white;
+        }
+        .error {
+            background: #f44336;
+            color: white;
+        }
+        .comparison-result {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .transcript {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        #targetPhrase {
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Voice Validator</h1>
+        
+        <p>Please speak this phrase:</p>
+        <div id="targetPhrase">The quick brown fox</div>
+
+        <div class="step">
+            <h2>Step 1: Record Reference Voice</h2>
+            <p>Speak the phrase to create your reference</p>
+            <button id="recordReference">Record Reference</button>
+            <div id="referenceStatus" class="status"></div>
+            <div id="referenceTranscript" class="transcript"></div>
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Record Test Voice</h2>
+            <p>Speak the same phrase again to verify</p>
+            <button id="recordTest" disabled>Record Test</button>
+            <div id="testStatus" class="status"></div>
+            <div id="testTranscript" class="transcript"></div>
+        </div>
+
+        <div class="step">
+            <h2>Step 3: Compare</h2>
+            <button id="compare" disabled>Compare Voices</button>
+            <div id="comparisonResult" class="comparison-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if browser supports speech recognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            console.error('Speech Recognition API not available');
+            alert('Speech recognition is not supported in this browser. Please try Chrome, Edge, or Safari.');
+        } else {
+            console.log('Speech Recognition API is available:', SpeechRecognition);
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        // Add connection test
+        async function testConnection() {
+            return new Promise((resolve) => {
+                const testRecognition = new SpeechRecognition();
+                testRecognition.continuous = false;
+                testRecognition.interimResults = false;
+                testRecognition.lang = 'en-US';
+                
+                testRecognition.onstart = () => {
+                    console.log('Connection test successful');
+                    testRecognition.stop();
+                    resolve(true);
+                };
+                
+                testRecognition.onerror = (error) => {
+                    console.error('Connection test failed:', error);
+                    resolve(false);
+                };
+                
+                try {
+                    testRecognition.start();
+                } catch (error) {
+                    console.error('Connection test failed to start:', error);
+                    resolve(false);
+                }
+            });
+        }
+
+        // Add retry mechanism
+        let retryCount = 0;
+        const MAX_RETRIES = 3;
+
+        async function startRecordingWithRetry(isReference) {
+            isRecordingReference = isReference;
+            const status = document.getElementById(isRecordingReference ? 'referenceStatus' : 'testStatus');
+            const button = document.getElementById(isRecordingReference ? 'recordReference' : 'recordTest');
+            
+            console.group('Starting Recording');
+            console.log('Recording Type:', isReference ? 'Reference' : 'Test');
+            console.log('Button State:', {
+                disabled: button.disabled,
+                text: button.textContent
+            });
+            console.log('Status Element:', {
+                text: status.textContent,
+                className: status.className
+            });
+            
+            status.textContent = 'Testing connection...';
+            status.className = 'status recording';
+            button.disabled = true;
+
+            // Test connection first
+            const isConnected = await testConnection();
+            if (!isConnected) {
+                status.textContent = 'Error: Cannot connect to speech recognition service. Please check your internet connection.';
+                status.className = 'status error';
+                button.disabled = false;
+                console.groupEnd();
+                return;
+            }
+
+            status.textContent = 'Listening...';
+            
+            try {
+                console.log('Attempting to start speech recognition...');
+                recognition.start();
+                console.log('Speech recognition started successfully');
+            } catch (error) {
+                console.error('Speech Recognition Start Error:', error);
+                if (retryCount < MAX_RETRIES) {
+                    retryCount++;
+                    console.log(`Retrying... (${retryCount}/${MAX_RETRIES})`);
+                    setTimeout(() => startRecordingWithRetry(isReference), 1000);
+                } else {
+                    status.textContent = 'Error: Speech recognition failed to start. Please try again later.';
+                    status.className = 'status error';
+                    button.disabled = false;
+                    retryCount = 0;
+                }
+            }
+            console.groupEnd();
+        }
+
+        // Update event listeners to use new function
+        document.getElementById('recordReference').addEventListener('click', () => {
+            startRecordingWithRetry(true);
+        });
+
+        document.getElementById('recordTest').addEventListener('click', () => {
+            startRecordingWithRetry(false);
+        });
+
+        // Add error handling for network issues
+        recognition.onerror = (event) => {
+            const status = document.getElementById(isRecordingReference ? 'referenceStatus' : 'testStatus');
+            
+            console.group('Speech Recognition Error');
+            console.error('Error Type:', event.error);
+            console.error('Error Details:', event);
+            console.error('Current State:', {
+                isRecordingReference,
+                referenceText,
+                testText,
+                status: status.textContent,
+                retryCount
+            });
+            console.groupEnd();
+            
+            if (event.error === 'network' && retryCount < MAX_RETRIES) {
+                retryCount++;
+                console.log(`Retrying after network error... (${retryCount}/${MAX_RETRIES})`);
+                setTimeout(() => startRecordingWithRetry(isRecordingReference), 1000);
+                return;
+            }
+            
+            switch(event.error) {
+                case 'network':
+                    status.textContent = 'Error: Cannot connect to speech recognition service. Please check your internet connection and try again.';
+                    break;
+                case 'not-allowed':
+                case 'permission-denied':
+                    status.textContent = 'Error: Microphone access was denied. Please allow microphone access and try again.';
+                    break;
+                case 'audio-capture':
+                    status.textContent = 'Error: No microphone detected. Please check your microphone connection.';
+                    break;
+                case 'no-speech':
+                    status.textContent = 'Error: No speech detected. Please speak clearly.';
+                    break;
+                case 'aborted':
+                    status.textContent = 'Error: Speech recognition was aborted. Please try again.';
+                    break;
+                default:
+                    status.textContent = `Error: ${event.error}. Please try again.`;
+            }
+            
+            status.className = 'status error';
+            
+            // Re-enable the record button if there was an error
+            if (isRecordingReference) {
+                document.getElementById('recordReference').disabled = false;
+            } else {
+                document.getElementById('recordTest').disabled = false;
+            }
+            
+            retryCount = 0;
+        };
+
+        let referenceText = '';
+        let testText = '';
+        let isRecordingReference = false;
+
+        function calculateSimilarity(str1, str2) {
+            // Levenshtein distance calculation
+            const matrix = Array(str2.length + 1).fill().map(() => Array(str1.length + 1).fill(0));
+            
+            for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
+            for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
+            
+            for (let j = 1; j <= str2.length; j++) {
+                for (let i = 1; i <= str1.length; i++) {
+                    const substitutionCost = str1[i - 1].toLowerCase() === str2[j - 1].toLowerCase() ? 0 : 1;
+                    matrix[j][i] = Math.min(
+                        matrix[j][i - 1] + 1,
+                        matrix[j - 1][i] + 1,
+                        matrix[j - 1][i - 1] + substitutionCost
+                    );
+                }
+            }
+            
+            const maxLength = Math.max(str1.length, str2.length);
+            const distance = matrix[str2.length][str1.length];
+            return ((maxLength - distance) / maxLength) * 100;
+        }
+
+        recognition.onresult = (event) => {
+            console.group('Speech Recognition Result');
+            console.log('Raw Results:', event.results);
+            
+            const transcript = event.results[0][0].transcript;
+            const confidence = event.results[0][0].confidence;
+            
+            console.log('Transcript:', transcript);
+            console.log('Confidence:', confidence);
+            
+            if (isRecordingReference) {
+                referenceText = transcript;
+                document.getElementById('referenceTranscript').textContent = transcript;
+                document.getElementById('referenceStatus').textContent = 'Reference recorded!';
+                document.getElementById('referenceStatus').className = 'status success';
+                document.getElementById('recordTest').disabled = false;
+                document.getElementById('recordReference').disabled = false;
+            } else {
+                testText = transcript;
+                document.getElementById('testTranscript').textContent = transcript;
+                document.getElementById('testStatus').textContent = 'Test recorded!';
+                document.getElementById('testStatus').className = 'status success';
+                document.getElementById('compare').disabled = false;
+                document.getElementById('recordTest').disabled = false;
+            }
+            console.groupEnd();
+        };
+
+        document.getElementById('compare').addEventListener('click', () => {
+            console.group('Comparison Results');
+            const targetPhrase = document.getElementById('targetPhrase').textContent;
+            
+            console.log('Target Phrase:', targetPhrase);
+            console.log('Reference Text:', referenceText);
+            console.log('Test Text:', testText);
+            
+            // Calculate similarities
+            const refToTarget = calculateSimilarity(referenceText, targetPhrase);
+            const testToTarget = calculateSimilarity(testText, targetPhrase);
+            const refToTest = calculateSimilarity(referenceText, testText);
+            
+            console.log('Similarity Scores:', {
+                refToTarget,
+                testToTarget,
+                refToTest
+            });
+            
+            const resultElement = document.getElementById('comparisonResult');
+            
+            // Check if both recordings match the target phrase reasonably well
+            if (refToTarget > 70 && testToTarget > 70) {
+                // If both match the target, check if they match each other
+                if (refToTest > 85) {
+                    resultElement.textContent = '✅ Voice Verified!';
+                    resultElement.style.color = '#4CAF50';
+                } else {
+                    resultElement.textContent = '❌ Different Voices Detected';
+                    resultElement.style.color = '#f44336';
+                }
+            } else {
+                resultElement.textContent = '❌ Please speak the exact phrase clearly';
+                resultElement.style.color = '#f44336';
+            }
+            console.groupEnd();
+        });
+    </script>
+</body>
+</html> 
