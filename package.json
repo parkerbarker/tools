@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "wrangler pages dev public",
     "deploy": "wrangler pages deploy public",
-    "preview": "wrangler pages dev public --local"
+    "preview": "wrangler pages dev public --local",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
     "wrangler": "^4"
   },
   "engines": {
