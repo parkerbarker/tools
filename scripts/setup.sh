@@ -1,6 +1,6 @@
 #!/bin/bash
 # Cloudflare Resources Setup Script
-# Run this to create the D1, KV, and R2 resources needed for the demos.
+# Run this to create the D1 and KV resources needed for the demos.
 # After running, copy the IDs into wrangler.toml
 
 set -e
@@ -33,20 +33,7 @@ echo "Run: npx wrangler kv namespace create DEMO_KV"
 echo ""
 npx wrangler kv namespace create DEMO_KV || echo -e "${RED}Namespace may already exist${NC}"
 echo ""
-echo -e "${GREEN}Copy the id to wrangler.toml as 'id'${NC}"
-echo ""
-
-# R2 Bucket
-echo -e "${YELLOW}Creating R2 Bucket...${NC}"
-echo ""
-echo -e "${YELLOW}NOTE: R2 must be enabled in Cloudflare Dashboard first!${NC}"
-echo "Go to: https://dash.cloudflare.com/ -> R2 Object Storage -> Get Started"
-echo ""
-echo "Run: npx wrangler r2 bucket create tools-demo-bucket"
-echo ""
-npx wrangler r2 bucket create tools-demo-bucket || echo -e "${RED}Bucket creation failed - enable R2 in dashboard first${NC}"
-echo ""
-echo -e "${GREEN}R2 bucket created (no ID needed in config)${NC}"
+echo -e "${GREEN}Copy the id to wrangler.toml${NC}"
 echo ""
 
 echo "=========================================="
@@ -59,6 +46,3 @@ echo "2. Run 'pnpm dev' to test locally"
 echo "3. Run 'pnpm deploy' to deploy to production"
 echo ""
 echo "Note: Workers AI doesn't require setup - just the binding in wrangler.toml"
-echo ""
-echo "If R2 failed, enable it at:"
-echo "https://dash.cloudflare.com/ -> R2 Object Storage -> Get Started"

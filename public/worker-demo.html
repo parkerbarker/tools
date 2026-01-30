@@ -47,7 +47,6 @@
     [demo-icon="random"] { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
     [demo-icon="db"] { background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%); }
     [demo-icon="kv"] { background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%); }
-    [demo-icon="r2"] { background: linear-gradient(135deg, #8EC5FC 0%, #E0C3FC 100%); }
     [demo-icon="ai"] { background: linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 50%, #2BFF88 100%); }
     
     [response-box] {
@@ -95,11 +94,6 @@
       padding-left: 12px;
     }
     
-    [file-item] {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
   </style>
 </head>
 <body>
@@ -313,41 +307,6 @@
       </div>
     </article>
 
-    <!-- R2 Storage Demo -->
-    <article demo-card bg="surface" p="lg" rounded shadow my="lg">
-      <div layout="row" gap="md" align="center" mb="md">
-        <div demo-icon="r2"><span>📦</span></div>
-        <div>
-          <h2 size="lg">R2 Storage (Objects)</h2>
-          <p color="muted" size="sm">S3-compatible object storage - upload and list files</p>
-        </div>
-      </div>
-      
-      <div layout="row" gap="sm" mb="md">
-        <code bg="muted" p="xs" rounded size="sm">GET/POST/DELETE /api/demo/storage</code>
-      </div>
-      
-      <div layout="column" gap="sm" mb="md">
-        <div layout="row" gap="sm" responsive>
-          <input type="text" id="r2Filename" placeholder="filename.txt" p="sm" rounded border style="flex:1">
-          <input type="text" id="r2Content" placeholder="File content (text)" p="sm" rounded border style="flex:2">
-        </div>
-      </div>
-      
-      <div layout="row" gap="sm" mb="md">
-        <button variant="primary" onclick="uploadFile()" id="r2UploadBtn">Upload</button>
-        <button variant="secondary" onclick="listFiles()" id="r2ListBtn">List Files</button>
-      </div>
-      
-      <div mt="md">
-        <div layout="row" gap="xs" align="center" mb="xs">
-          <span status-dot id="r2Status"></span>
-          <span size="sm" color="muted" id="r2StatusText">Ready</span>
-        </div>
-        <div response-box bg="muted" p="md" rounded id="r2Response">Upload a file or list existing ones...</div>
-      </div>
-    </article>
-
     <!-- Section: AI -->
     <p section-divider color="muted" mt="xl" mb="md" weight="medium">Workers AI</p>
 
@@ -411,7 +370,6 @@
 ├── random.js   → Basic: Random generator
 ├── db.js       → D1: SQLite database
 ├── kv.js       → KV: Key-value store
-├── storage.js  → R2: Object storage
 └── ai.js       → AI: ML inference</code>
         </div>
         
@@ -419,7 +377,6 @@
           <p weight="medium" mb="sm">Free Tier Limits:</p>
           <code block size="sm">D1:  5GB storage, 5M reads/day, 100K writes/day
 KV:  1GB storage, 100K reads/day, 1K writes/day
-R2:  10GB storage, 10M reads/month
 AI:  10,000 neurons/day</code>
         </div>
         
@@ -430,7 +387,7 @@ AI:  10,000 neurons/day</code>
   </main>
 
   <footer p="lg" text="center" border="top">
-    <p color="muted">Built with Cloudflare Pages + Workers + D1 + KV + R2 + AI</p>
+    <p color="muted">Built with Cloudflare Pages + Workers + D1 + KV + AI</p>
   </footer>
 
   <script src="https://parkerbarker.com/js/semantic.js"></script>
@@ -719,79 +676,6 @@ AI:  10,000 neurons/day</code>
         showResponse('kv', err.message, true);
       } finally {
         setLoading('kvResetBtn', false);
-      }
-    }
-
-    // ==========================================
-    // R2 Storage
-    // ==========================================
-
-    async function listFiles() {
-      setLoading('r2ListBtn', true);
-      setStatus('r2', 'loading', 'Listing...');
-      
-      try {
-        const start = performance.now();
-        const res = await fetch('/api/demo/storage');
-        const data = await res.json();
-        const duration = Math.round(performance.now() - start);
-        
-        if (data.error) {
-          setStatus('r2', 'error', 'Error');
-          showResponse('r2', data, true);
-        } else {
-          setStatus('r2', 'success', `${data.count} files (${duration}ms)`);
-          showResponse('r2', data);
-        }
-      } catch (err) {
-        setStatus('r2', 'error', 'Failed');
-        showResponse('r2', err.message, true);
-      } finally {
-        setLoading('r2ListBtn', false);
-      }
-    }
-
-    async function uploadFile() {
-      const filename = document.getElementById('r2Filename').value;
-      const content = document.getElementById('r2Content').value;
-      
-      if (!filename || !content) {
-        setStatus('r2', 'error', 'Error');
-        showResponse('r2', 'Filename and content are required', true);
-        return;
-      }
-      
-      setLoading('r2UploadBtn', true);
-      setStatus('r2', 'loading', 'Uploading...');
-      
-      try {
-        const start = performance.now();
-        const res = await fetch('/api/demo/storage', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            name: filename, 
-            content: content,
-            contentType: 'text/plain'
-          })
-        });
-        const data = await res.json();
-        const duration = Math.round(performance.now() - start);
-        
-        if (data.error) {
-          setStatus('r2', 'error', 'Error');
-          showResponse('r2', data, true);
-        } else {
-          setStatus('r2', 'success', `Uploaded (${duration}ms)`);
-          showResponse('r2', data);
-          document.getElementById('r2Filename').value = '';
-          document.getElementById('r2Content').value = '';
-        }
-      } catch (err) {
-        setStatus('r2', 'error', 'Failed');
-        showResponse('r2', err.message, true);
-      } finally {
-        setLoading('r2UploadBtn', false);
       }
     }
 
