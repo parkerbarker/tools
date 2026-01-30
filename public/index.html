@@ -46,6 +46,7 @@
     [tool-icon="timer"] { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
     [tool-icon="voice"] { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
     [tool-icon="cards"] { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+    [tool-icon="worker"] { background: linear-gradient(135deg, #f6851b 0%, #faad3f 100%); }
     
     [arrow] {
       transition: transform 0.2s ease;
@@ -139,6 +140,17 @@
           <div tool-icon="cards"><span>🃏</span></div>
           <h2 size="lg">Card Survey</h2>
           <p color="muted">Interactive card display and survey tool. Browse and interact with card collections.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+      <a href="worker-demo.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="worker"><span>⚡</span></div>
+          <h2 size="lg">Worker Demo</h2>
+          <p color="muted">See Cloudflare Workers in action. Interactive examples of serverless functions at the edge.</p>
           <div layout="row" justify="end">
             <span arrow color="muted">→</span>
           </div>

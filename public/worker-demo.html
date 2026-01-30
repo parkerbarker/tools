@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloudflare Workers Demo | Parker Barker Tools</title>
+  <link rel="stylesheet" href="https://assets.parkerbarker.com/css/semantic.css">
+  <link rel="icon" type="image/png" href="https://assets.parkerbarker.com/favicon/favicon-32x32.png">
+  <style>
+    :root {
+      --worker-gradient: linear-gradient(135deg, #f6851b 0%, #faad3f 100%);
+    }
+    
+    [hero] {
+      background: var(--worker-gradient);
+      color: white;
+    }
+    
+    [hero] h1,
+    [hero] p {
+      color: white;
+    }
+    
+    [demo-card] {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    [demo-card]:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    [demo-icon] {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    [demo-icon="time"] { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    [demo-icon="info"] { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    [demo-icon="echo"] { background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); }
+    [demo-icon="random"] { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+    
+    [response-box] {
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    [loading] {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    [status-dot] {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-muted);
+    }
+    
+    [status-dot="success"] { background: #22c55e; }
+    [status-dot="error"] { background: #ef4444; }
+    [status-dot="loading"] { 
+      background: #f59e0b;
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <header layout="row" justify="between" align="center" p="md" sticky>
+    <nav layout="row" gap="lg" align="center">
+      <a href="https://parkerbarker.com" no-underline><strong font="serif">Parker</strong>Barker</a>
+      <a href="/">Tools</a>
+    </nav>
+    <button variant="ghost" data-theme-toggle aria-label="Toggle theme">
+      <span emoji>🌓</span>
+    </button>
+  </header>
+  
+  <section hero p="xl" text="center">
+    <h1 size="xxl" weight="bold">Cloudflare Workers Demo</h1>
+    <p size="lg" mt="sm">See serverless functions in action. Each example calls a different Worker endpoint.</p>
+  </section>
+
+  <main p="lg" container>
+    
+    <!-- Server Time Demo -->
+    <article demo-card bg="surface" p="lg" rounded shadow my="lg">
+      <div layout="row" gap="md" align="center" mb="md">
+        <div demo-icon="time"><span>🕐</span></div>
+        <div>
+          <h2 size="lg">Server Time</h2>
+          <p color="muted" size="sm">Get the current time from the Cloudflare edge server (always UTC)</p>
+        </div>
+      </div>
+      
+      <div layout="row" gap="sm" mb="md">
+        <code bg="muted" p="xs" rounded size="sm">GET /api/demo/time</code>
+      </div>
+      
+      <button variant="primary" onclick="fetchTime()" id="timeBtn">Fetch Server Time</button>
+      
+      <div mt="md">
+        <div layout="row" gap="xs" align="center" mb="xs">
+          <span status-dot id="timeStatus"></span>
+          <span size="sm" color="muted" id="timeStatusText">Ready</span>
+        </div>
+        <div response-box bg="muted" p="md" rounded id="timeResponse">Click the button to fetch server time...</div>
+      </div>
+    </article>
+
+    <!-- Request Info Demo -->
+    <article demo-card bg="surface" p="lg" rounded shadow my="lg">
+      <div layout="row" gap="md" align="center" mb="md">
+        <div demo-icon="info"><span>🌍</span></div>
+        <div>
+          <h2 size="lg">Request Info</h2>
+          <p color="muted" size="sm">See what Cloudflare knows about your request (geo, ISP, headers)</p>
+        </div>
+      </div>
+      
+      <div layout="row" gap="sm" mb="md">
+        <code bg="muted" p="xs" rounded size="sm">GET /api/demo/info</code>
+      </div>
+      
+      <button variant="primary" onclick="fetchInfo()" id="infoBtn">Fetch Request Info</button>
+      
+      <div mt="md">
+        <div layout="row" gap="xs" align="center" mb="xs">
+          <span status-dot id="infoStatus"></span>
+          <span size="sm" color="muted" id="infoStatusText">Ready</span>
+        </div>
+        <div response-box bg="muted" p="md" rounded id="infoResponse">Click the button to see your request info...</div>
+      </div>
+    </article>
+
+    <!-- Echo/Transform Demo -->
+    <article demo-card bg="surface" p="lg" rounded shadow my="lg">
+      <div layout="row" gap="md" align="center" mb="md">
+        <div demo-icon="echo"><span>🔄</span></div>
+        <div>
+          <h2 size="lg">Text Transform</h2>
+          <p color="muted" size="sm">POST text to the Worker and get it transformed server-side</p>
+        </div>
+      </div>
+      
+      <div layout="row" gap="sm" mb="md">
+        <code bg="muted" p="xs" rounded size="sm">POST /api/demo/echo</code>
+      </div>
+      
+      <div layout="column" gap="sm" mb="md">
+        <label size="sm" weight="medium">Enter text to transform:</label>
+        <input type="text" id="echoInput" placeholder="Hello, Cloudflare Workers!" value="Hello, Cloudflare Workers!" p="sm" rounded border>
+      </div>
+      
+      <button variant="primary" onclick="fetchEcho()" id="echoBtn">Transform Text</button>
+      
+      <div mt="md">
+        <div layout="row" gap="xs" align="center" mb="xs">
+          <span status-dot id="echoStatus"></span>
+          <span size="sm" color="muted" id="echoStatusText">Ready</span>
+        </div>
+        <div response-box bg="muted" p="md" rounded id="echoResponse">Enter text and click to see server-side transformations...</div>
+      </div>
+    </article>
+
+    <!-- Random Generator Demo -->
+    <article demo-card bg="surface" p="lg" rounded shadow my="lg">
+      <div layout="row" gap="md" align="center" mb="md">
+        <div demo-icon="random"><span>🎲</span></div>
+        <div>
+          <h2 size="lg">Random Generator</h2>
+          <p color="muted" size="sm">Generate random data using Worker's crypto API</p>
+        </div>
+      </div>
+      
+      <div layout="row" gap="sm" mb="md">
+        <code bg="muted" p="xs" rounded size="sm">GET /api/demo/random?type=...&count=...</code>
+      </div>
+      
+      <div layout="row" gap="md" mb="md" responsive>
+        <div layout="column" gap="xs">
+          <label size="sm" weight="medium">Type:</label>
+          <select id="randomType" p="sm" rounded border>
+            <option value="numbers">Numbers (1-100)</option>
+            <option value="uuid">UUIDs</option>
+            <option value="hex">Hex Strings</option>
+            <option value="dice">Dice Rolls</option>
+            <option value="coin">Coin Flips</option>
+          </select>
+        </div>
+        <div layout="column" gap="xs">
+          <label size="sm" weight="medium">Count:</label>
+          <input type="number" id="randomCount" value="5" min="1" max="20" p="sm" rounded border>
+        </div>
+      </div>
+      
+      <button variant="primary" onclick="fetchRandom()" id="randomBtn">Generate Random</button>
+      
+      <div mt="md">
+        <div layout="row" gap="xs" align="center" mb="xs">
+          <span status-dot id="randomStatus"></span>
+          <span size="sm" color="muted" id="randomStatusText">Ready</span>
+        </div>
+        <div response-box bg="muted" p="md" rounded id="randomResponse">Select options and click to generate random data...</div>
+      </div>
+    </article>
+
+    <!-- How It Works -->
+    <article bg="surface" p="lg" rounded shadow my="xl">
+      <h2 size="lg" mb="md">How It Works</h2>
+      <div layout="column" gap="md">
+        <p>Each button above calls a <strong>Cloudflare Pages Function</strong> (powered by Workers). These are serverless functions that run at Cloudflare's edge - close to your users worldwide.</p>
+        
+        <div bg="muted" p="md" rounded>
+          <p weight="medium" mb="sm">Project Structure:</p>
+          <code block size="sm">functions/
+├── api/
+│   ├── hello.js      → /api/hello
+│   └── demo/
+│       ├── time.js   → /api/demo/time
+│       ├── info.js   → /api/demo/info
+│       ├── echo.js   → /api/demo/echo
+│       └── random.js → /api/demo/random</code>
+        </div>
+        
+        <p color="muted" size="sm">File paths in <code>functions/</code> automatically become API routes. No configuration needed!</p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer p="lg" text="center" border="top">
+    <p color="muted">Built with Cloudflare Pages + Workers</p>
+  </footer>
+
+  <script src="https://parkerbarker.com/js/semantic.js"></script>
+  <script>
+    Semantic.init();
+
+    // Helper to update status indicators
+    function setStatus(prefix, state, text) {
+      const dot = document.getElementById(`${prefix}Status`);
+      const label = document.getElementById(`${prefix}StatusText`);
+      dot.setAttribute('status-dot', state);
+      label.textContent = text;
+    }
+
+    // Helper to display response
+    function showResponse(prefix, data, isError = false) {
+      const box = document.getElementById(`${prefix}Response`);
+      if (isError) {
+        box.textContent = `Error: ${data}`;
+      } else {
+        box.textContent = JSON.stringify(data, null, 2);
+      }
+    }
+
+    // Time endpoint
+    async function fetchTime() {
+      const btn = document.getElementById('timeBtn');
+      btn.setAttribute('loading', '');
+      setStatus('time', 'loading', 'Fetching...');
+      
+      try {
+        const start = performance.now();
+        const res = await fetch('/api/demo/time');
+        const data = await res.json();
+        const duration = Math.round(performance.now() - start);
+        
+        setStatus('time', 'success', `Success (${duration}ms)`);
+        showResponse('time', data);
+      } catch (err) {
+        setStatus('time', 'error', 'Failed');
+        showResponse('time', err.message, true);
+      } finally {
+        btn.removeAttribute('loading');
+      }
+    }
+
+    // Info endpoint
+    async function fetchInfo() {
+      const btn = document.getElementById('infoBtn');
+      btn.setAttribute('loading', '');
+      setStatus('info', 'loading', 'Fetching...');
+      
+      try {
+        const start = performance.now();
+        const res = await fetch('/api/demo/info');
+        const data = await res.json();
+        const duration = Math.round(performance.now() - start);
+        
+        setStatus('info', 'success', `Success (${duration}ms)`);
+        showResponse('info', data);
+      } catch (err) {
+        setStatus('info', 'error', 'Failed');
+        showResponse('info', err.message, true);
+      } finally {
+        btn.removeAttribute('loading');
+      }
+    }
+
+    // Echo endpoint
+    async function fetchEcho() {
+      const btn = document.getElementById('echoBtn');
+      const input = document.getElementById('echoInput');
+      btn.setAttribute('loading', '');
+      setStatus('echo', 'loading', 'Sending...');
+      
+      try {
+        const start = performance.now();
+        const res = await fetch('/api/demo/echo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: input.value })
+        });
+        const data = await res.json();
+        const duration = Math.round(performance.now() - start);
+        
+        setStatus('echo', 'success', `Success (${duration}ms)`);
+        showResponse('echo', data);
+      } catch (err) {
+        setStatus('echo', 'error', 'Failed');
+        showResponse('echo', err.message, true);
+      } finally {
+        btn.removeAttribute('loading');
+      }
+    }
+
+    // Random endpoint
+    async function fetchRandom() {
+      const btn = document.getElementById('randomBtn');
+      const type = document.getElementById('randomType').value;
+      const count = document.getElementById('randomCount').value;
+      btn.setAttribute('loading', '');
+      setStatus('random', 'loading', 'Generating...');
+      
+      try {
+        const start = performance.now();
+        const res = await fetch(`/api/demo/random?type=${type}&count=${count}`);
+        const data = await res.json();
+        const duration = Math.round(performance.now() - start);
+        
+        setStatus('random', 'success', `Success (${duration}ms)`);
+        showResponse('random', data);
+      } catch (err) {
+        setStatus('random', 'error', 'Failed');
+        showResponse('random', err.message, true);
+      } finally {
+        btn.removeAttribute('loading');
+      }
+    }
+  </script>
+</body>
+</html>
