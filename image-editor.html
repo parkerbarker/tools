@@ -319,6 +319,19 @@
             text-align: right;
         }
         
+        /* Featured/Highlighted Control */
+        .slider-row.featured {
+            background: rgba(59, 130, 246, 0.15);
+            margin: -6px -10px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .slider-row.featured .slider-label {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+        
         /* Filter Pills */
         .filter-pills {
             display: flex;
@@ -496,6 +509,21 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
+        // URL Parameter Feature Mapping
+        const featureMap = {
+            'brightness': 'brightnessSlider',
+            'contrast': 'contrastSlider',
+            'blur': 'blurSlider',
+            'corners': 'cornerRadius',
+            'rounded': 'cornerRadius',
+            'rotation': 'rotationSlider',
+            'rotate': 'rotationSlider',
+            'quality': 'jpegQuality',
+            'grayscale': 'grayscale',
+            'sepia': 'sepia',
+            'invert': 'invert'
+        };
+        
         // State
         let originalImage = null;
         let currentImage = null;
@@ -1029,6 +1057,64 @@
                 URL.revokeObjectURL(url);
             }, mimeType, useQuality ? quality : undefined);
         }
+        
+        // URL Parameter Feature Support
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                feature: params.get('feature')?.toLowerCase(),
+                imageUrl: params.get('url') || params.get('image')
+            };
+        }
+        
+        function highlightFeature(featureName) {
+            const elementId = featureMap[featureName];
+            if (!elementId) return false;
+            
+            // Open the adjust panel
+            adjustPanel.classList.add('visible');
+            document.getElementById('adjustToggle').classList.add('btn-primary');
+            
+            // Find the slider row containing this element
+            const element = document.getElementById(elementId);
+            if (!element) return false;
+            
+            // For filter pills, highlight the filters row
+            if (['grayscale', 'sepia', 'invert'].includes(featureName)) {
+                const filtersRow = element.closest('.slider-row') || 
+                    document.querySelector('.filter-pills')?.closest('.slider-row');
+                if (filtersRow) {
+                    filtersRow.classList.add('featured');
+                }
+            } else {
+                // For sliders, highlight the slider row
+                const sliderRow = element.closest('.slider-row');
+                if (sliderRow) {
+                    sliderRow.classList.add('featured');
+                }
+            }
+            
+            return true;
+        }
+        
+        // Initialize on page load
+        function initFromUrlParams() {
+            const params = getUrlParams();
+            
+            // Highlight featured control if specified
+            if (params.feature) {
+                highlightFeature(params.feature);
+            }
+            
+            // Load image from URL if specified
+            if (params.imageUrl) {
+                urlInput.value = params.imageUrl;
+                loadFromUrl();
+            }
+        }
+        
+        // Run on page load
+        initFromUrlParams();
     </script>
 </body>
 </html>

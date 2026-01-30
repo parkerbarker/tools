@@ -54,6 +54,15 @@
     article[tool-card]:hover [arrow] {
       transform: translateX(4px);
     }
+    
+    /* Hidden "more" tools - revealed via URL parameter */
+    [more] {
+      display: none;
+    }
+    
+    [more][revealed] {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -136,6 +145,18 @@
         </article>
       </a>
       
+      <!-- Hidden "more" tools - reveal with ?show=voice -->
+      <a href="voice.html" no-underline more="voice">
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="voice"><span>🗣️</span></div>
+          <h2 size="lg">Voice Tool</h2>
+          <p color="muted">Experimental voice recording and playback tool.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
     </div>
   </main>
 
@@ -144,6 +165,22 @@
   </footer>
 
   <script src="https://parkerbarker.com/js/semantic.js"></script>
-  <script>Semantic.init();</script>
+  <script>
+    Semantic.init();
+    
+    // Reveal hidden tools via URL parameter ?show=toolname
+    // Supports multiple tools: ?show=voice,other
+    const params = new URLSearchParams(window.location.search);
+    const showParam = params.get('show');
+    if (showParam) {
+      const toolsToShow = showParam.split(',');
+      toolsToShow.forEach(toolName => {
+        const tool = document.querySelector(`[more="${toolName.trim()}"]`);
+        if (tool) {
+          tool.setAttribute('revealed', '');
+        }
+      });
+    }
+  </script>
 </body>
 </html>
