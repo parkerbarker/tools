@@ -1,3 +1,8 @@
+<!--
+  Parker Barker Tools - https://parkerbarker.com
+  Open Source under MIT License
+  https://tools.parkerbarker.com/license.html
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -434,6 +439,24 @@
         /* Hidden file input */
         .hidden-input {
             display: none;
+        }
+        
+        /* Attribution Footer */
+        .attribution-footer {
+            position: fixed;
+            bottom: 8px;
+            right: 12px;
+            font-size: 11px;
+            color: #666;
+            z-index: 100;
+        }
+        .attribution-footer a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .attribution-footer a:hover {
+            color: #3b82f6;
         }
     </style>
 </head>
@@ -1219,5 +1242,9 @@
         // Run on page load
         initFromUrlParams();
     </script>
+    
+    <footer class="attribution-footer">
+        <a href="license.html">Open source</a> by <a href="https://parkerbarker.com">Parker Barker</a>
+    </footer>
 </body>
 </html>
