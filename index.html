@@ -1,196 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools Directory</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        h1 {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .subtitle {
-            color: rgba(255,255,255,0.85);
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
-        
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-        }
-        
-        .tool-card {
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 10px 20px rgba(0,0,0,0.04);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-        }
-        
-        .tool-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        
-        .tool-card h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1a1a2e;
-        }
-        
-        .tool-card p {
-            font-size: 0.95rem;
-            color: #6b7280;
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-        
-        .tool-card .arrow {
-            color: #9ca3af;
-            font-size: 1.25rem;
-            align-self: flex-end;
-            transition: transform 0.2s ease, color 0.2s ease;
-        }
-        
-        .tool-card:hover .arrow {
-            transform: translateX(4px);
-            color: #667eea;
-        }
-        
-        /* Icon colors */
-        .icon-music { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .icon-image { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .icon-timer { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .icon-voice { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .icon-cards { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-        
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 600px) {
-            body {
-                padding: 24px 16px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .tools-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .tool-card {
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tools Directory | Parker Barker</title>
+  <link rel="stylesheet" href="https://parkerbarker.com/css/semantic.css">
+  <link rel="icon" type="image/png" href="https://parkerbarker.com/favicon/favicon-32x32.png">
+  <style>
+    /* Custom accent for tools */
+    :root {
+      --tools-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    [hero] {
+      background: var(--tools-gradient);
+      color: white;
+    }
+    
+    [hero] h1,
+    [hero] p {
+      color: white;
+    }
+    
+    article[tool-card] {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    article[tool-card]:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    [tool-icon] {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    [tool-icon="music"] { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    [tool-icon="image"] { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    [tool-icon="timer"] { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    [tool-icon="voice"] { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    [tool-icon="cards"] { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+    
+    [arrow] {
+      transition: transform 0.2s ease;
+    }
+    
+    article[tool-card]:hover [arrow] {
+      transform: translateX(4px);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Tools Directory</h1>
-            <p class="subtitle">A collection of useful browser-based utilities</p>
-        </header>
-        
-        <div class="tools-grid">
-            <a href="ukulele-tuner.html" class="tool-card">
-                <div class="tool-icon icon-music">🎸</div>
-                <h2>Ukulele Tuner</h2>
-                <p>Tune your ukulele using your microphone. Detects notes in real-time and shows how far off you are.</p>
-                <span class="arrow">&rarr;</span>
-            </a>
-            
-            <a href="guitar-tuner.html" class="tool-card">
-                <div class="tool-icon icon-music">🎵</div>
-                <h2>Guitar Tuner</h2>
-                <p>Tune your guitar with real-time pitch detection. Works with acoustic and electric guitars.</p>
-                <span class="arrow">&rarr;</span>
-            </a>
-            
-            <a href="image-editor.html" class="tool-card">
-                <div class="tool-icon icon-image">🖼️</div>
-                <h2>Image Editor</h2>
-                <p>Edit and crop images right in your browser. No uploads required - everything stays local.</p>
-                <span class="arrow">&rarr;</span>
-            </a>
-            
-            <a href="test-timer.html" class="tool-card">
-                <div class="tool-icon icon-timer">⏱️</div>
-                <h2>Test Timer</h2>
-                <p>Multiple countdown timers for tests, exams, or any timed activities. Clean and distraction-free.</p>
-                <span class="arrow">&rarr;</span>
-            </a>
-            
-            <a href="voice-validator.html" class="tool-card">
-                <div class="tool-icon icon-voice">🎤</div>
-                <h2>Voice Validator</h2>
-                <p>Record your voice and play it back. Useful for pronunciation practice and speech validation.</p>
-                <span class="arrow">&rarr;</span>
-            </a>
-            
-            <a href="cards/survey.html" class="tool-card">
-                <div class="tool-icon icon-cards">🃏</div>
-                <h2>Card Survey</h2>
-                <p>Interactive card display and survey tool. Browse and interact with card collections.</p>
-                <span class="arrow">&rarr;</span>
-            </a>
-        </div>
-        
-        <footer>
-            <p>Built with care by Parker Barker</p>
-        </footer>
+  <header layout="row" justify="between" align="center" p="md" sticky>
+    <nav layout="row" gap="lg" align="center">
+      <a href="https://parkerbarker.com" no-underline><strong font="serif">Parker Barker</strong></a>
+      <a href="/">Tools</a>
+    </nav>
+    <button variant="ghost" data-theme-toggle aria-label="Toggle theme">
+      <span emoji>🌓</span>
+    </button>
+  </header>
+
+  <section hero py="2xl" text="center">
+    <div container>
+      <h1 size="4xl" font="serif">Tools Directory</h1>
+      <p size="lg" my="md">A collection of useful browser-based utilities</p>
     </div>
+  </section>
+
+  <main p="lg" container>
+    <div layout="grid" cols="auto" gap="lg" responsive my="xl">
+      
+      <a href="ukulele-tuner.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="music"><span>🎸</span></div>
+          <h2 size="lg">Ukulele Tuner</h2>
+          <p color="muted">Tune your ukulele using your microphone. Detects notes in real-time and shows how far off you are.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+      <a href="guitar-tuner.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="music"><span>🎵</span></div>
+          <h2 size="lg">Guitar Tuner</h2>
+          <p color="muted">Tune your guitar with real-time pitch detection. Works with acoustic and electric guitars.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+      <a href="image-editor.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="image"><span>🖼️</span></div>
+          <h2 size="lg">Image Editor</h2>
+          <p color="muted">Edit and crop images right in your browser. No uploads required - everything stays local.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+      <a href="test-timer.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="timer"><span>⏱️</span></div>
+          <h2 size="lg">Test Timer</h2>
+          <p color="muted">Multiple countdown timers for tests, exams, or any timed activities. Clean and distraction-free.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+      <a href="voice-validator.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="voice"><span>🎤</span></div>
+          <h2 size="lg">Voice Validator</h2>
+          <p color="muted">Record your voice and play it back. Useful for pronunciation practice and speech validation.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+      <a href="cards/survey.html" no-underline>
+        <article tool-card bg="surface" p="lg" rounded shadow layout="column" gap="md">
+          <div tool-icon="cards"><span>🃏</span></div>
+          <h2 size="lg">Card Survey</h2>
+          <p color="muted">Interactive card display and survey tool. Browse and interact with card collections.</p>
+          <div layout="row" justify="end">
+            <span arrow color="muted">→</span>
+          </div>
+        </article>
+      </a>
+      
+    </div>
+  </main>
+
+  <footer p="lg" text="center" border="top">
+    <p color="muted">Built with care by Parker Barker</p>
+  </footer>
+
+  <script src="https://parkerbarker.com/js/semantic.js"></script>
+  <script>Semantic.init();</script>
 </body>
 </html>
