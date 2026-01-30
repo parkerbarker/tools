@@ -15,36 +15,40 @@ echo ""
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # D1 Database
 echo -e "${YELLOW}Creating D1 Database...${NC}"
 echo "Run: npx wrangler d1 create tools-demo-db"
 echo ""
-npx wrangler d1 create tools-demo-db || echo -e "${RED}Database may already exist${NC}"
+npx wrangler d1 create tools-demo-db || echo "Database may already exist"
 echo ""
 echo -e "${GREEN}Copy the database_id to wrangler.toml${NC}"
 echo ""
 
-# KV Namespace (Wrangler v4 syntax: space instead of colon)
+# KV Namespace
 echo -e "${YELLOW}Creating KV Namespace...${NC}"
-echo "Run: npx wrangler kv namespace create DEMO_KV"
+echo "Run: npx wrangler kv:namespace create DEMO_KV"
 echo ""
-npx wrangler kv namespace create DEMO_KV || echo -e "${RED}Namespace may already exist${NC}"
+npx wrangler kv:namespace create DEMO_KV || echo "Namespace may already exist"
 echo ""
 echo -e "${GREEN}Copy the id to wrangler.toml as 'id'${NC}"
 echo ""
 
+# KV Preview Namespace (for local dev)
+echo -e "${YELLOW}Creating KV Preview Namespace...${NC}"
+echo "Run: npx wrangler kv:namespace create DEMO_KV --preview"
+echo ""
+npx wrangler kv:namespace create DEMO_KV --preview || echo "Preview namespace may already exist"
+echo ""
+echo -e "${GREEN}Copy the id to wrangler.toml as 'preview_id'${NC}"
+echo ""
+
 # R2 Bucket
 echo -e "${YELLOW}Creating R2 Bucket...${NC}"
-echo ""
-echo -e "${YELLOW}NOTE: R2 must be enabled in Cloudflare Dashboard first!${NC}"
-echo "Go to: https://dash.cloudflare.com/ -> R2 Object Storage -> Get Started"
-echo ""
 echo "Run: npx wrangler r2 bucket create tools-demo-bucket"
 echo ""
-npx wrangler r2 bucket create tools-demo-bucket || echo -e "${RED}Bucket creation failed - enable R2 in dashboard first${NC}"
+npx wrangler r2 bucket create tools-demo-bucket || echo "Bucket may already exist"
 echo ""
 echo -e "${GREEN}R2 bucket created (no ID needed in config)${NC}"
 echo ""
@@ -59,6 +63,3 @@ echo "2. Run 'pnpm dev' to test locally"
 echo "3. Run 'pnpm deploy' to deploy to production"
 echo ""
 echo "Note: Workers AI doesn't require setup - just the binding in wrangler.toml"
-echo ""
-echo "If R2 failed, enable it at:"
-echo "https://dash.cloudflare.com/ -> R2 Object Storage -> Get Started"

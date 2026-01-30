@@ -15,14 +15,13 @@ pages_build_output_dir = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "tools-demo-db"
-database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  # Replace after running setup.sh
+database_id = "4b6dc0de-c415-426e-b35f-ed2dc93459c9"
 
 # KV Key-Value Store
 # Create with: npx wrangler kv:namespace create DEMO_KV
 [[kv_namespaces]]
 binding = "DEMO_KV"
-id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"          # Replace with production ID
-preview_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # Replace with preview ID
+id = "a3e2bc1b6e7e4141bffb8de4a5ea8d92"
 
 # R2 Object Storage
 # Create with: npx wrangler r2 bucket create tools-demo-bucket
