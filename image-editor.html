@@ -332,6 +332,54 @@
             font-weight: 500;
         }
         
+        /* Share Link Icon */
+        .share-link {
+            opacity: 0;
+            cursor: pointer;
+            color: #888;
+            transition: all 0.15s;
+            padding: 3px;
+            margin-left: 2px;
+        }
+        .slider-row:hover .share-link {
+            opacity: 1;
+        }
+        .share-link:hover {
+            color: #3b82f6;
+            transform: scale(1.1);
+        }
+        .slider-label-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-width: 65px;
+        }
+        .slider-label-group .slider-label {
+            min-width: unset;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid #404040;
+            color: #e0e0e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            opacity: 0;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
         /* Filter Pills */
         .filter-pills {
             display: flex;
@@ -427,6 +475,9 @@
             <img id="cropImage" src="">
         </div>
         
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">Link copied!</div>
+        
         <!-- Crop Actions -->
         <div class="crop-actions" id="cropActions">
             <button class="btn btn-primary btn-small" onclick="applyCrop()">Apply Crop</button>
@@ -466,37 +517,58 @@
             <!-- Expandable Adjust Panel -->
             <div class="adjust-panel" id="adjustPanel">
                 <div class="slider-row">
-                    <span class="slider-label">Brightness</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Brightness</span>
+                        <svg class="share-link" onclick="copyFeatureLink('brightness')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <input type="range" id="brightnessSlider" class="slider" min="0" max="200" value="100">
                     <span class="slider-value" id="brightnessValue">100%</span>
                 </div>
                 <div class="slider-row">
-                    <span class="slider-label">Contrast</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Contrast</span>
+                        <svg class="share-link" onclick="copyFeatureLink('contrast')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <input type="range" id="contrastSlider" class="slider" min="0" max="200" value="100">
                     <span class="slider-value" id="contrastValue">100%</span>
                 </div>
                 <div class="slider-row">
-                    <span class="slider-label">Blur</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Blur</span>
+                        <svg class="share-link" onclick="copyFeatureLink('blur')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <input type="range" id="blurSlider" class="slider" min="0" max="20" value="0">
                     <span class="slider-value" id="blurValue">0px</span>
                 </div>
                 <div class="slider-row">
-                    <span class="slider-label">Corners</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Corners</span>
+                        <svg class="share-link" onclick="copyFeatureLink('corners')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <input type="range" id="cornerRadius" class="slider" min="0" max="50" value="0">
                     <span class="slider-value" id="cornerValue">0%</span>
                 </div>
                 <div class="slider-row">
-                    <span class="slider-label">Rotation</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Rotation</span>
+                        <svg class="share-link" onclick="copyFeatureLink('rotation')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <input type="range" id="rotationSlider" class="slider" min="-180" max="180" value="0">
                     <span class="slider-value" id="rotationValue">0°</span>
                 </div>
                 <div class="slider-row" id="qualityControl">
-                    <span class="slider-label">Quality</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Quality</span>
+                        <svg class="share-link" onclick="copyFeatureLink('quality')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <input type="range" id="jpegQuality" class="slider" min="10" max="100" value="100">
                     <span class="slider-value" id="qualityValue">100%</span>
                 </div>
                 <div class="slider-row">
-                    <span class="slider-label">Filters</span>
+                    <div class="slider-label-group">
+                        <span class="slider-label">Filters</span>
+                        <svg class="share-link" onclick="copyFeatureLink('grayscale')" width="14" height="14" viewBox="0 0 640 512" fill="currentColor" title="Copy shareable link"><path d="M580.3 267.2c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L365.3 75c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l11.3-11.3c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9L435.3 368c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9l.1-.1c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-.1 .1c-56.2 56.2-56.2 147.4 0 203.6s147.4 56.2 203.6 0l122.8-122.8zM59.7 244.8C3.5 301 3.5 392.2 59.7 448.4s147.4 56.2 203.6 0L274.6 437c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0l-11.3 11.3c-43.9 43.9-115.1 43.9-158.9 0s-43.9-115.1 0-158.9L204.7 144c43.9-43.9 115.1-43.9 158.9 0s43.9 115.1 0 158.9l-.1 .1c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0l.1-.1c56.2-56.2 56.2-147.4 0-203.6s-147.4-56.2-203.6 0L59.7 244.8z"/></svg>
+                    </div>
                     <div class="filter-pills">
                         <button class="filter-pill" data-filter="grayscale" onclick="toggleFilter('grayscale')">Grayscale</button>
                         <button class="filter-pill" data-filter="sepia" onclick="toggleFilter('sepia')">Sepia</button>
@@ -1111,6 +1183,37 @@
                 urlInput.value = params.imageUrl;
                 loadFromUrl();
             }
+        }
+        
+        // Copy shareable link for a feature
+        function copyFeatureLink(featureName) {
+            const url = new URL(window.location.href);
+            url.search = ''; // Clear existing params
+            url.searchParams.set('feature', featureName);
+            
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                showToast(`Link copied for "${featureName}"`);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url.toString();
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast(`Link copied for "${featureName}"`);
+            });
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('visible');
+            
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 2000);
         }
         
         // Run on page load
