@@ -5,17 +5,38 @@ name = "tools-parkerbarker"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "public"
 
-# Bindings for future use (uncomment as needed):
+# ============================================
+# BINDINGS - Run scripts/setup.sh first, then
+# replace the placeholder IDs below
+# ============================================
+
+# D1 SQLite Database
+# Create with: npx wrangler d1 create tools-demo-db
+[[d1_databases]]
+binding = "DB"
+database_name = "tools-demo-db"
+database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  # Replace after running setup.sh
+
+# KV Key-Value Store
+# Create with: npx wrangler kv:namespace create DEMO_KV
+[[kv_namespaces]]
+binding = "DEMO_KV"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"          # Replace with production ID
+preview_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  # Replace with preview ID
+
+# R2 Object Storage
+# Create with: npx wrangler r2 bucket create tools-demo-bucket
+[[r2_buckets]]
+binding = "DEMO_BUCKET"
+bucket_name = "tools-demo-bucket"
+
+# Workers AI
+# No setup needed - just works!
+[ai]
+binding = "AI"
+
+# ============================================
+# Environment Variables (optional)
+# ============================================
 # [vars]
 # MY_VAR = "production_value"
-
-# KV Namespace (uncomment to add)
-# [[kv_namespaces]]
-# binding = "MY_KV"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-# D1 Database (uncomment to add)
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
