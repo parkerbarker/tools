@@ -1,7 +1,7 @@
 #!/bin/bash
 # Cloudflare Resources Setup Script
 # Creates D1 and KV resources for a project
-#
+# Great work!
 # Usage:
 #   ./scripts/setup.sh                    # Interactive mode - prompts for name
 #   ./scripts/setup.sh myproject          # Creates myproject-db and MYPROJECT_KV
