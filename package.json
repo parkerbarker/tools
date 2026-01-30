@@ -1,0 +1,17 @@
+{
+  "name": "tools-parkerbarker",
+  "version": "1.0.0",
+  "description": "Browser-based utilities hosted on Cloudflare Pages",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public",
+    "preview": "wrangler pages dev public --local"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

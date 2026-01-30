@@ -1,0 +1,21 @@
+# Cloudflare Pages configuration
+# https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+
+name = "tools-parkerbarker"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "public"
+
+# Bindings for future use (uncomment as needed):
+# [vars]
+# MY_VAR = "production_value"
+
+# KV Namespace (uncomment to add)
+# [[kv_namespaces]]
+# binding = "MY_KV"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# D1 Database (uncomment to add)
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "my-database"
+# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
