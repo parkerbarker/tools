@@ -10,14 +10,14 @@ const CORS_HEADERS = {
 
 // Initialize the guestbook table if it doesn't exist
 async function initializeDB(db) {
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS guestbook (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       message TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `).run();
 }
 
 export async function onRequest(context) {
@@ -91,15 +91,15 @@ export async function onRequest(context) {
         // Fetch the newly created entry
         const { results } = await env.DB.prepare(
           'SELECT * FROM guestbook WHERE id = ?'
-        ).bind(meta.last_row_id).all();
+        ).bind(meta?.last_row_id).all();
         
         return new Response(
           JSON.stringify({
             success: true,
             entry: results[0],
             meta: {
-              rows_written: meta.rows_written,
-              duration_ms: meta.duration,
+              rows_written: meta?.rows_written ?? meta?.changes ?? 1,
+              duration_ms: meta?.duration ?? null,
             },
           }),
           {
@@ -130,7 +130,7 @@ export async function onRequest(context) {
       return new Response(
         JSON.stringify({
           success: true,
-          deleted: meta.rows_written,
+          deleted: meta?.rows_written ?? meta?.changes ?? 0,
         }),
         {
           headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
@@ -151,6 +151,7 @@ export async function onRequest(context) {
       JSON.stringify({
         error: 'Database error',
         message: error.message,
+        stack: error.stack?.split('\n').slice(0, 3).join('\n'),
       }),
       {
         status: 500,
